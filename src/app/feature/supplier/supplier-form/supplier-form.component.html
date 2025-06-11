@@ -1,0 +1,90 @@
+<div class="div-container">
+    <h1 class="form-title">Agregar</h1>
+    <form>
+        <div class="section">
+            <label for="nombreProveedor" class="sub">
+                Nombre del Proveedor
+            </label>
+            <input id="nombreProveedor" type="text" class="input" />
+        </div>
+        <div class="section">
+            <h2 class="sub" id="info-supplier">Información del Proveedor</h2>
+        </div>
+
+        <div>
+            <div class="flex-container">
+                <div class="input-group">
+                    <label for="empresa" class="label">Empresa:</label>
+                    <input id="empresa" type="text" class="input" />
+                </div>
+                <div class="input-group ">
+                    <label for="tipoSuministro" class="label">Tipo de suministro:</label>
+                    <input id="tipoSuministro" type="text" class="input" />
+                </div>
+                <div class="input-group">
+                    <label for="direccion" class="label">Dirección:</label>
+                    <input id="direccion" type="text" class="input" />
+                </div>
+                <div class="input-group">
+                    <label for="email" class="label">Email:</label>
+                    <input id="email" type="email" class="input" />
+                </div>
+            </div>
+
+            <div class="flex-container">
+                <div class="input-group">
+                    <label for="celular" class="label">Celular:</label>
+                    <input id="celular" type="text" class="input" />
+                </div>
+                <div class="input-group">
+                    <label for="ruc" class="label">Ruc:</label>
+                    <input id="ruc" type="text" class="input" />
+                </div>
+                <div class="input-group">
+                    <label for="estado" class="label">Estado:</label>
+                    <select id="estado" class="input">
+                        <option value="A">Activo</option>
+                        <option value="I">Inactivo</option>
+                    </select>
+                </div>
+            </div>
+                <div class="button-wrapper">
+                    <button type="button" class="btn-primary">Agregar</button>
+                </div>
+        </div>
+    </form>
+
+    <div class="section">
+        <table class="table">
+            <thead>
+                <tr class="table-header">
+                    <th class="table-cell">Proveedor</th>
+                    <th class="table-cell">Empresa</th>
+                    <th class="table-cell">Tipo de suministro</th>
+                    <th class="table-cell">Dirección</th>
+                    <th class="table-cell">Email</th>
+                    <th class="table-cell">Celular</th>
+                    <th class="table-cell">Ruc</th>
+                    <th class="table-cell">Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="table-cell">&nbsp;</td>
+                    <td class="table-cell">&nbsp;</td>
+                    <td class="table-cell">&nbsp;</td>
+                    <td class="table-cell">&nbsp;</td>
+                    <td class="table-cell">&nbsp;</td>
+                    <td class="table-cell">&nbsp;</td>
+                    <td class="table-cell">&nbsp;</td>
+                    <td class="table-cell">&nbsp;</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="actions">
+        <button type="button" class="btn-primary">Cancelar</button>
+        <button type="button" class="btn-primary" [routerLink]="['/supplier-list']">Guardar</button>
+    </div>
+</div>

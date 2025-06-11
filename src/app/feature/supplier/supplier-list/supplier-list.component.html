@@ -1,0 +1,75 @@
+<div class="cont">
+    <div>
+        <h1 class="title">Proveedores</h1>
+    </div>
+    <div class="container">
+        <div class="table-container">
+            <table class="provider-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Proveedor</th>
+                        <th>Empresa</th>
+                        <th>Tipo de suministro</th>
+                        <th>Dirección</th>
+                        <th>Email</th>
+                        <th>Celular</th>
+                        <th>Ruc</th>
+                        <th>Estado</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>001</td>
+                        <td>Mario López</td>
+                        <td>Coca cola</td>
+                        <td>Bebidas Gasificadas</td>
+                        <td>AV. Miraflorez</td>
+                        <td>cocacola&#64;gmail.com</td>
+                        <td>987654321</td>
+                        <td>20987654321</td>
+                        <td>Activo</td>
+                        <td class="actions">
+                            <button class="btn btn-edit">Modificar</button>
+                            <button class="btn btn-delete">Eliminar</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>002</td>
+                        <td>José Perez</td>
+                        <td>Yogurt Gloria</td>
+                        <td>Yogurt</td>
+                        <td>AV. Lorenzo</td>
+                        <td>gloria&#64;gmail.com</td>
+                        <td>987654322</td>
+                        <td>20987654323</td>
+                        <td>Activo</td>
+                        <td class="actions">
+                            <button class="btn btn-edit">Modificar</button>
+                            <button class="btn btn-delete">Eliminar</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>003</td>
+                        <td>Lilian Ramirez</td>
+                        <td>Grupo Florida</td>
+                        <td>Atunes</td>
+                        <td>Urb. San juan</td>
+                        <td>florida&#64;gmail.com</td>
+                        <td>987654356</td>
+                        <td>209876543234</td>
+                        <td>Activo</td>
+                        <td class="actions">
+                            <button class="btn btn-edit">Modificar</button>
+                            <button class="btn btn-delete">Eliminar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="ter-action">
+        <button class="btn btn-add" [routerLink]="['/supplier-form']">Agregar</button>
+    </div>
+</div>

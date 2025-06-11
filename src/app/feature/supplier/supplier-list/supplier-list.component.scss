@@ -1,0 +1,89 @@
+.cont {
+  display: block;
+  margin: 0;
+  padding: 2rem;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #6b2b27;
+  margin-bottom: 1.5rem;
+  font-family: serif;
+}
+
+.container {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  font-family: serif;
+}
+
+.table-container {
+  overflow-x: auto;
+  border-radius: 0.5rem;
+}
+
+.provider-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+
+  th, td {
+    padding: 0.75rem;
+    text-align: center;
+    border-top: 1px solid #d1d5db;
+  }
+
+  thead th {
+    background-color: #f9fafb;
+    font-weight: bold;
+    color: #333;
+    border-top: none;
+  }
+
+  tbody tr:hover {
+    background-color: #f3f4f6;
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.btn {
+  padding: 0.4rem 0.9rem;
+  border-radius: 1rem;
+  border: none;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  transition: filter 0.2s ease;
+
+  &-edit,
+  &-delete {
+    background-color: #6b2b27;
+    color: white;
+  }
+
+  &-add {
+    background-color: #6b2b27;
+    color: white;
+    width: 8rem;
+    height: 3rem;
+    border-radius: 1rem;
+  }
+
+  &:hover {
+    filter: brightness(90%);
+  }
+}
+
+.ter-action {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 2rem;
+}
