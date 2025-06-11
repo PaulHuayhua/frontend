@@ -1,0 +1,67 @@
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  background-color: #6d2423;
+  color: #fff;
+  padding: 20px;
+  width: 220px;
+  box-sizing: border-box;
+  transition: width 0.3s ease, padding 0.3s ease;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
+  &.collapsed {
+    width: 60px;
+    padding: 20px 10px;
+  }
+
+  .toggle-btn {
+    background: transparent;
+    border: none;
+    color: #ead585;
+    font-size: 22px;
+    cursor: pointer;
+    margin-bottom: 30px;
+    width: 100%;
+    text-align: right;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: #fff;
+    }
+  }
+
+  nav {
+    flex-grow: 1;
+
+    a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #ead585;
+      margin: 12px 0;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 16px;
+      border-radius: 4px;
+      padding: 8px 12px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+
+      &.active,
+      &:hover {
+        background-color: #ead585;
+        color: #6d2423;
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      // Para el icono
+      i {
+        font-size: 18px;
+      }
+    }
+  }
+}

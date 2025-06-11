@@ -1,0 +1,36 @@
+.alert {
+  padding: 1rem;
+  border-radius: 4px;
+  margin: 1rem 0;
+  position: relative;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 2px solid #6D2423;
+}
+
+.success {
+  background-color: #EAD585;
+  color: #6D2423;
+}
+
+.error {
+  background-color: #6D2423;
+  color: #EAD585;
+}
+
+.info {
+  background-color: white;
+  color: #6D2423;
+  border-color: #EAD585;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  color: inherit;
+}

@@ -1,0 +1,29 @@
+button {
+  padding: 0.5rem 1.2rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.primary {
+  background-color: #6D2423;
+  color: #EAD585;
+}
+
+.success {
+  background-color: #EAD585;
+  color: #6D2423;
+}
+
+.danger {
+  background-color: #6D2423;
+  color: white;
+  border: 2px solid #EAD585;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
