@@ -9,7 +9,7 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = `${environment.urlBackEnd}/auth`;
+  private apiUrl = `${environment.urlBackEnd}/v1/api/auth`;
   constructor(private http: HttpClient, private router: Router) {}
 
   login(data: LoginRequest): Observable<LoginResponse> {

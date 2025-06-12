@@ -31,11 +31,17 @@ export class ProductService {
     return this.http.post<Product>(`${this.urlBackEnd}/save`, product);
   }
 
-  update(product: Product) {
-    return this.http.put<Product>(`${this.urlBackEnd}/update/${product.identifier}`, product);
+  update(id: number, product: Product) {
+    return this.http.put<Product>(`${this.urlBackEnd}/update/${id}`, product);
   }
 
   updateState(id: number) {
-    return this.http.patch<Product>(`${this.urlBackEnd}/update-state/${id}`, {});
+    return this.http.put<Product>(`${this.urlBackEnd}/delete/${id}`, {});
   }
+
+  restoreProduct(id: number) {
+    return this.http.put<Product>(`${this.urlBackEnd}/restore/${id}`, {});
+  }
+
+
 }

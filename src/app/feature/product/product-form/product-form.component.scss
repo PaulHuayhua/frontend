@@ -1,151 +1,92 @@
-// Variables de estilo
-$color-fondo: #fff;
-$color-sidebar: #732222;
-$color-hover: #5a1a1a;
-$color-dorado: #d6ba8b;
-$color-texto: #5a1a1a;
-$color-borde: #ddd;
-
-
-// Contenedor principal del formulario
 .producto-container {
-  background-color: $color-fondo;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.15);
-  margin: 2rem auto;
-  max-width: 1000px;
-  font-weight: bold;
+  background-color: #fff;
+  padding: 1.5rem 1rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  max-width: 700px;
+  margin: 1rem auto;
+  font-size: 0.875rem;
 
-  h2 {
-    font-size: 1.3rem;
-    margin-bottom: 1rem;
+  h2, h3 {
+    color: #6D2423;
     font-weight: 600;
-    color: $color-texto;
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
   }
 
-  h3 {
-    font-size: 1rem;
-    margin-bottom: 0.75rem;
-    font-weight: 500;
-    color: $color-texto;
-    font-weight: bold;
-  }
-}
-
-// Campos de formulario
-.form-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  margin-bottom: 15px;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-
-  label {
-    font-size: 0.85rem;
-    margin-bottom: 5px;
-    color: $color-texto;
+  mat-divider {
+    margin: 0.75rem 0;
+    background-color: #EAD585;
+    height: 2px;
+    border-radius: 1px;
   }
 
-  input, select {
-    padding: 8px;
-    font-size: 0.9rem;
-    border: 1px solid $color-borde;
-    border-radius: 4px;
+  .form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
 
-    &:focus {
-      outline: none;
-      border-color: $color-dorado;
+  .form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 0.75rem;
+  }
+
+  mat-form-field {
+    width: 100%;
+
+    .mat-form-field-label {
+      font-size: 0.8rem;
+      color: #6D2423 !important;
+    }
+
+    .mat-input-element {
+      font-size: 0.85rem;
     }
   }
-}
 
-// Botón Agregar (parte superior)
-.btn-agregar {
-  background-color: $color-sidebar;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  margin-top: auto;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.9rem;
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1rem;
 
-  &:hover {
-    background-color: $color-hover;
-  }
-}
+    button {
+      padding: 0.4rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      border-radius: 6px;
+    }
 
-// Tabla de productos
-.table-container {
-  width: 100%;
-  overflow-x: auto;
-  margin: 20px 0;
-}
+    button[color="primary"] {
+      background-color: #6D2423;
+      color: #fff;
 
-.productos-table {
-  width: 100%;
-  border-collapse: collapse;
+      &:hover {
+        background-color: #581e1d;
+      }
+    }
 
-  th, td {
-    padding: 10px;
-    border-bottom: 1px solid $color-borde;
-    font-size: 0.9rem;
-    text-align: left;
+    button[color="warn"] {
+      border: 1px solid #6D2423;
+      color: #6D2423;
+      background-color: transparent;
+
+      &:hover {
+        background-color: rgba(109, 36, 35, 0.08);
+      }
+    }
   }
 
-  th {
-    background-color: $color-sidebar;
-    color: white;
-    font-weight: 500;
+  @media (max-width: 500px) {
+    .form-row {
+      grid-template-columns: 1fr;
+    }
+
+    .form-actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
   }
-
-  tbody tr:hover {
-    background-color: rgba($color-dorado, 0.15);
-  }
-}
-
-// Botones Cancelar y Guardar
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.btn-cancelar, .btn-guardar {
-  padding: 8px 16px;
-  font-size: 0.9rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  color: white;
-}
-
-.btn-cancelar {
-  background-color: #6c757d;
-
-  &:hover {
-    background-color: #5a6268;
-  }
-}
-
-.btn-guardar {
-  background-color: $color-sidebar;
-
-  &:hover {
-    background-color: $color-hover;
-  }
-}
-
-.section-divider {
-  border: none;
-  height: 1px;
-  background-color: #ccc; /* Color gris */
-  margin: 15px 0;
 }

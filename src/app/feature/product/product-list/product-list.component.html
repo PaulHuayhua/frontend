@@ -2,27 +2,26 @@
 
   <h2 class="title">INVENTARIO</h2>
 
-  <app-alert
-    *ngIf="showAlert"
-    [message]="alertMessage"
-    [type]="alertType"
-    [autoClose]="true">
-  </app-alert>
-
   <div class="top-bar">
-    <input
-      matInput
-      type="text"
-      placeholder="Buscar producto"
-      class="search-input"
-      (keyup)="applyFilter($event)"
-    />
-    <button mat-raised-button color="primary" routerLink="/product-form" class="btn-agregar">
-      Agregar
-    </button>
+    <input matInput type="text" placeholder="Buscar producto" class="search-input" (keyup)="applyFilter($event)" />
+
+    <div class="right-actions">
+
+      <div class="state-toggle-filter">
+        <mat-button-toggle-group [(ngModel)]="estadoFiltro" (change)="filtrarPorEstado()" class="estado-toggle"
+          name="estado" exclusive>
+
+          <mat-button-toggle value="todos">Todos</mat-button-toggle>
+          <mat-button-toggle value="activo">Activos</mat-button-toggle>
+          <mat-button-toggle value="inactivo">Inactivos</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+
+      <button mat-raised-button class="btn-agregar" routerLink="/product-form">Agregar</button>
+    </div>
   </div>
 
-  <table mat-table [dataSource]="dataSource" matSort class="product-table" matSortActive="name" matSortDirection="asc">
+  <table mat-table [dataSource]="dataSource" matSort class="product-table">
 
     <!-- ID Column -->
     <ng-container matColumnDef="identifier">
@@ -76,7 +75,9 @@
     <ng-container matColumnDef="state">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
       <td mat-cell *matCellDef="let element">
-        {{ element.state ? 'Activo' : 'Inactivo' }}
+        <span [ngClass]="element.state ? 'estado-activo' : 'estado-inactivo'">
+          {{ element.state ? 'Activo' : 'Inactivo' }}
+        </span>
       </td>
     </ng-container>
 
@@ -86,14 +87,27 @@
       <th mat-header-cell *matHeaderCellDef> Acciones </th>
       <td mat-cell *matCellDef="let element">
         <button mat-button color="primary" (click)="onEdit(element)">Modificar</button>
-        <button mat-button color="warn" (click)="onDelete(element)">Eliminar</button>
+
+        <ng-container *ngIf="element.state; else restoreButton">
+          <button mat-button color="warn" (click)="onDelete(element)">Eliminar</button>
+        </ng-container>
+
+        <ng-template #restoreButton>
+          <button mat-button color="accent" (click)="onRestore(element)">Restaurar</button>
+        </ng-template>
       </td>
     </ng-container>
+
 
     <!-- Header and Row Declaration -->
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
   </table>
+
+  <!-- Alert Component -->
+  <app-alert [message]="alertMessage" [type]="alertType" [visible]="showAlert" [confirm]="confirmAlert"
+    (close)="showAlert = false" (confirmResult)="handleAlertConfirm($event)">
+  </app-alert>
 
 </div>

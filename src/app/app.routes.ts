@@ -30,6 +30,7 @@ export const routes: Routes = [
             { path: 'supplier-form', component: SupplierFormComponent },
             { path: 'supplier-list', component: SupplierListComponent },
             { path: 'product-form', component: ProductFormComponent },
+            { path: 'product-form/:id', component: ProductFormComponent },
             { path: 'product-list', component: ProductListComponent },
             { path: 'purchase-form', component: PurchaseFormComponent },
             { path: 'purchase-list', component: PurchaseListComponent },

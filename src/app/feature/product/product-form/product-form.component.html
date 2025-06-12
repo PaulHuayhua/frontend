@@ -1,109 +1,84 @@
-<div class="producto-container">
-  <h2>Agregar</h2>
+<div class="producto-container mat-elevation-z4">
+  <h2>{{ isEditMode ? 'Modificar Producto' : 'Agregar Producto' }}</h2>
+  <mat-divider></mat-divider>
 
-  <hr class="section-divider" />
-  
-  <div class="form-container">
-    <div class="form-group full-width">
-      <label for="nombreProducto">Nombre del Producto</label>
-      <input type="text" id="nombreProducto">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form-container">
+
+    <!-- ID (solo en modo edición) -->
+    <ng-container *ngIf="isEditMode">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>ID</mat-label>
+        <input matInput formControlName="identifier" readonly />
+      </mat-form-field>
+    </ng-container>
+
+    <!-- Nombre -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nombre</mat-label>
+      <input matInput formControlName="name" required />
+    </mat-form-field>
+
+    <!-- Descripción -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Descripción</mat-label>
+      <textarea matInput formControlName="description" required></textarea>
+    </mat-form-field>
+
+    <div class="form-row">
+      <!-- Tamaño -->
+      <mat-form-field appearance="outline" class="form-group">
+        <mat-label>Tamaño</mat-label>
+        <input matInput formControlName="size" />
+      </mat-form-field>
+
+      <!-- Stock -->
+      <mat-form-field appearance="outline" class="form-group">
+        <mat-label>Stock</mat-label>
+        <input matInput type="number" formControlName="stock" required />
+      </mat-form-field>
+
+      <!-- Precio -->
+      <mat-form-field appearance="outline" class="form-group">
+        <mat-label>Precio</mat-label>
+        <input matInput type="number" formControlName="price" required />
+      </mat-form-field>
     </div>
 
-    <hr class="section-divider" />
-    
-    <div class="info-section">
-      <h3>Información del Producto</h3>
-      
-      <div class="form-row">
-        <div class="form-group">
-          <label for="tipo">Tipo:</label>
-          <input type="text" id="tipo">
-        </div>
-        
-        <div class="form-group">
-          <label for="sabor">Sabor:</label>
-          <input type="text" id="sabor">
-        </div>
-        
-        <div class="form-group">
-          <label for="tamano">Tamaño:</label>
-          <input type="text" id="tamano">
-        </div>
-        
-        <div class="form-group">
-          <label for="stock">Stock:</label>
-          <input type="text" id="stock">
-        </div>
-      </div>
-      
-      <div class="form-row">
-        <div class="form-group">
-          <label for="precio">Precio:</label>
-          <input type="text" id="precio">
-        </div>
-        
-        <div class="form-group">
-          <label for="fecha">Fecha de Vencimiento:</label>
-          <input type="text" id="fecha">
-        </div>
-        
-        <div class="form-group">
-          <label for="estado">Estado:</label>
-          <select id="estado">
-            <option value="activo">Activo</option>
-            <option value="inactivo">Inactivo</option>
-          </select>
-        </div>
-        
-        <div class="form-group">
-          <label for="categoria">Categoría:</label>
-          <select id="categoria">
-            <option value="bebida">Bebida</option>
-            <option value="gaseosa">Gaseosa</option>
-            <option value="Limpieza">Limpieza</option>
-          </select>
-        </div>
-      </div>
-    </div>
-    
-    <div class="action-button">
-      <button class="btn-agregar">Agregar</button>
-    </div>
+    <!-- Fecha de Vencimiento -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Fecha de Vencimiento</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="expiration_date" />
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
 
-    <hr class="section-divider" />
+    <!-- Categoría -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Categoría</mat-label>
+      <mat-select formControlName="category" required>
+        <mat-option value="bebida">Bebida</mat-option>
+        <mat-option value="gaseosa">Gaseosa</mat-option>
+        <mat-option value="limpieza">Limpieza</mat-option>
+      </mat-select>
+    </mat-form-field>
 
-    <div class="table-container">
-      <table class="productos-table">
-        <thead>
-          <tr>
-            <th>Productos</th>
-            <th>Tipo</th>
-            <th>Sabor</th>
-            <th>Tamaño</th>
-            <th>Stock</th>
-            <th>Precio</th>
-            <th>Fecha de vencimiento</th>
-            <th>Estado</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    
+    <!-- Botones -->
     <div class="form-actions">
-      <button class="btn-cancelar">Cancelar</button>
-      <button [routerLink]="['/product-list']" class="btn-guardar">Guardar</button>
+      <button mat-stroked-button type="button" color="warn" (click)="onCancel()">Cancelar</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+        {{ isEditMode ? 'Actualizar' : 'Guardar' }}
+      </button>
     </div>
-  </div>
+
+  </form>
 </div>
+
+<!-- Componente de alerta reutilizable -->
+<app-alert
+  [message]="alertMessage"
+  [type]="alertType"
+  [visible]="showAlert"
+  [confirm]="confirmAlert"
+  (close)="showAlert = false"
+  (confirmResult)="handleAlertConfirm($event)">
+</app-alert>

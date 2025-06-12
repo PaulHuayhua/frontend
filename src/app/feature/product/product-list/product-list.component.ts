@@ -6,7 +6,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { FormsModule } from '@angular/forms';
 import { AlertComponent } from '../../../shared/components/alert/alert.component';
 import { ProductService } from '../../../core/services/product.service';
 import { Product } from '../../../core/interfaces/product';
@@ -16,10 +19,14 @@ import { Product } from '../../../core/interfaces/product';
   standalone: true,
   imports: [
     CommonModule,
+    MatFormFieldModule,
+    MatSelectModule,
     MatTableModule,
     MatSortModule,
+    MatButtonToggleModule,
     MatInputModule,
     MatButtonModule,
+    FormsModule,
     RouterModule,
     AlertComponent,
   ],
@@ -32,12 +39,18 @@ export class ProductListComponent implements OnInit, AfterViewInit {
     'expiration_date', 'category', 'state', 'acciones'
   ];
 
-  products: Product[] = [];
+  allProducts: Product[] = [];           // todos los productos desde el backend
+  filteredProducts: Product[] = [];      // productos tras aplicar filtro
   dataSource = new MatTableDataSource<Product>([]);
 
   showAlert: boolean = false;
+  confirmAlert: boolean = false;
   alertMessage: string = '';
-  alertType: 'success' | 'error' | 'info' = 'info';
+  alertType: 'success' | 'error' | 'info' | 'warning' = 'info';
+  productToDelete: Product | null = null;
+
+  estadoFiltro: 'todos' | 'activo' | 'inactivo' = 'todos';
+  textoFiltro: string = '';
 
   private productService = inject(ProductService);
   private router = inject(Router);
@@ -50,27 +63,48 @@ export class ProductListComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
-
-    this.dataSource.filterPredicate = (data: Product, filter: string): boolean => {
-      const lowerFilter = filter.trim().toLowerCase();
-      return (
-        data.name.toLowerCase().includes(lowerFilter) ||
-        data.description.toLowerCase().includes(lowerFilter) ||
-        data.category.toLowerCase().includes(lowerFilter)
-      );
-    };
   }
+
 
   loadProducts(): void {
     this.productService.findAll().subscribe((data: Product[]) => {
-      this.products = data;
-      this.dataSource.data = data;
+      this.allProducts = data;
+      this.applyAllFilters();
+      this.dataSource.sort = this.sort;
     });
   }
 
+
+  applyAllFilters(): void {
+    // Filtrado por estado
+    this.filteredProducts = this.allProducts.filter(p => {
+      if (this.estadoFiltro === 'todos') return true;
+      const activo = this.estadoFiltro === 'activo';
+      return p.state === activo;
+    });
+
+    // Filtrado por texto
+    const texto = this.textoFiltro.trim().toLowerCase();
+    if (texto) {
+      this.filteredProducts = this.filteredProducts.filter(p =>
+        p.name.toLowerCase().includes(texto) ||
+        p.description.toLowerCase().includes(texto) ||
+        p.category.toLowerCase().includes(texto)
+      );
+    }
+
+    // ✅ En vez de crear un nuevo MatTableDataSource, actualizamos los datos
+    this.dataSource.data = this.filteredProducts;
+  }
+
+
   applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
-    this.dataSource.filter = filterValue;
+    this.textoFiltro = (event.target as HTMLInputElement).value;
+    this.applyAllFilters();
+  }
+
+  filtrarPorEstado() {
+    this.applyAllFilters();
   }
 
   onEdit(product: Product) {
@@ -78,32 +112,72 @@ export class ProductListComponent implements OnInit, AfterViewInit {
   }
 
   onDelete(product: Product) {
-    if (product.identifier === undefined) {
-      this.setAlert('ID del producto no válido.', 'error');
-      return;
-    }
+    this.alertMessage = `¿Estás seguro de desactivar el producto ${product.name}?`;
+    this.alertType = 'warning';
+    this.confirmAlert = true;
+    this.showAlert = true;
+    this.productToDelete = product;
+  }
 
-    if (confirm(`¿Desactivar producto ${product.name}?`)) {
-      this.productService.updateState(product.identifier).subscribe({
+  onRestore(product: Product) {
+    this.alertMessage = `¿Estás seguro de restaurar el producto ${product.name}?`;
+    this.alertType = 'info';
+    this.confirmAlert = true;
+    this.showAlert = true;
+    this.productToDelete = product;
+  }
+
+
+  handleAlertConfirm(confirmed: boolean) {
+    if (confirmed && this.productToDelete) {
+      const id = this.productToDelete.identifier;
+      const esActivo = this.productToDelete.state;
+
+      const request$ = esActivo
+        ? this.productService.updateState(id)
+        : this.productService.restoreProduct(id);
+
+      request$.subscribe({
         next: () => {
-          this.setAlert('Producto desactivado correctamente', 'success');
+          const nuevoEstado = !esActivo;
+          const mensaje = nuevoEstado
+            ? 'Producto restaurado correctamente'
+            : 'Producto desactivado correctamente';
+          this.setAlert(mensaje, 'success');
+          this.productToDelete = null;
           this.loadProducts();
         },
-        error: (err: any) => {
-          this.setAlert('Error al desactivar el producto. Revisa la consola.', 'error');
-          console.error('Error updateState:', err);
+        error: (err) => {
+          this.setAlert('Error al actualizar el estado del producto.', 'error');
+          console.error(err);
         }
       });
     }
+
+    this.showAlert = false;
+    this.confirmAlert = false;
+  }
+
+
+  handleCancel() {
+    this.confirmAlert = false;
+    this.productToDelete = null;
+    this.showAlert = false;
+  }
+
+  setAlert(message: string, type: 'success' | 'error' | 'info' | 'warning') {
+    this.showAlert = false;
+    setTimeout(() => {
+      this.alertMessage = message;
+      this.alertType = type;
+      this.showAlert = true;
+      setTimeout(() => {
+        this.showAlert = false;
+      }, 3000);
+    }, 0);
   }
 
   goProductForm() {
     this.router.navigate(['/product-form']);
-  }
-
-  setAlert(message: string, type: 'success' | 'error' | 'info') {
-    this.alertMessage = message;
-    this.alertType = type;
-    this.showAlert = true;
   }
 }
