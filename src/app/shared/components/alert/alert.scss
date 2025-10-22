@@ -1,0 +1,89 @@
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal.alert {
+  background-color: #f9f3d6; // Derivado de #EAD585, más suave que blanco
+  border: 3px solid #6D2423;
+  border-radius: 16px;
+  padding: 24px;
+  max-width: 420px;
+  width: 90%;
+  text-align: center;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  animation: fadeInScale 0.3s ease-out;
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.alert-icon {
+  font-size: 56px;
+  margin-bottom: 16px;
+  height: 56px;
+  width: 56px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: visible;
+}
+
+.success .alert-icon {
+  color: #4caf50;
+}
+.error .alert-icon {
+  color: #6D2423;
+}
+.info .alert-icon {
+  color: #1976d2;
+}
+.warning .alert-icon {
+  color: #EAD585;
+}
+
+.alert-content {
+  font-size: 17px;
+  font-weight: 500;
+  color: #3a3a3a;
+  margin-bottom: 20px;
+}
+
+.alert-actions {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.alert-actions button {
+  min-width: 110px;
+  font-weight: 600;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: #6D2423;
+}

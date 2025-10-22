@@ -1,0 +1,28 @@
+<div class="sidebar" [class.collapsed]="!expanded">
+  <button class="toggle-btn" (click)="toggle()">
+    {{ expanded ? '◀' : '▶' }}
+  </button>
+
+  <nav>
+    <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
+      <span class="material-icons">dashboard</span>
+      <span *ngIf="expanded">Dashboard</span>
+    </a>
+    <a routerLink="/sale-list" routerLinkActive="active">
+      <span class="material-icons">point_of_sale</span>
+      <span *ngIf="expanded">Venta</span>
+    </a>
+    <a routerLink="/buy-list" routerLinkActive="active">
+      <span class="material-icons">shopping_cart</span>
+      <span *ngIf="expanded">Compras</span>
+    </a>
+    <a routerLink="product-list" routerLinkActive="active">
+      <span class="material-icons">inventory_2</span>
+      <span *ngIf="expanded">Productos</span>
+    </a>
+    <a routerLink="/supplier-list" routerLinkActive="active">
+      <span class="material-icons">local_shipping</span>
+      <span *ngIf="expanded">Proveedores</span>
+    </a>
+  </nav>
+</div>

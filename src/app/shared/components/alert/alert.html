@@ -1,0 +1,18 @@
+<div *ngIf="visible" class="backdrop">
+  <div class="modal alert" [ngClass]="type">
+    <mat-icon class="alert-icon">{{ getIcon() }}</mat-icon>
+
+    <div class="alert-content">
+      <strong>{{ getTitle() }}:</strong> {{ message }}
+    </div>
+
+    <div class="alert-actions" *ngIf="confirm">
+      <button mat-raised-button color="primary" (click)="onConfirm(true)">Confirmar</button>
+      <button mat-raised-button [ngStyle]="{ 'background-color': '#6D2423', color: '#fff' }" (click)="onConfirm(false)">Cancelar</button>
+    </div>
+
+    <button *ngIf="!confirm" mat-icon-button class="close-button" (click)="onClose()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+</div>

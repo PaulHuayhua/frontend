@@ -1,0 +1,6 @@
+{
+  "root": "dist/inventaStore",
+  "routes": {
+    "/**": "index.html"
+  }
+}
