@@ -22,31 +22,41 @@
 
     <!-- Nombre -->
     <div class="form-group full-width">
-      <label for="name">Nombre</label>
-      <input id="name" type="text" formControlName="name" required />
-      <div class="error" *ngIf="form.get('name')?.hasError('required')">El nombre es obligatorio.</div>
-      <div class="error" *ngIf="form.get('name')?.hasError('multipleSpaces')">No se permiten múltiples espacios.</div>
+      <label for="name">Nombre <span class="required">*</span></label>
+      <input id="name" type="text" formControlName="name" placeholder="Ingrese el nombre del producto" />
+      <div class="error" *ngIf="form.get('name')?.invalid && form.get('name')?.touched">
+        <span *ngIf="form.get('name')?.hasError('required')">El nombre es obligatorio.</span>
+        <span *ngIf="form.get('name')?.hasError('maxlength')">Máximo 70 caracteres.</span>
+        <span *ngIf="form.get('name')?.hasError('multipleSpaces')">No se permiten múltiples espacios.</span>
+      </div>
     </div>
 
     <!-- Descripción -->
     <div class="form-group full-width">
-      <label for="description">Descripción</label>
-      <textarea id="description" formControlName="description" rows="3" required></textarea>
-      <div class="error" *ngIf="form.get('description')?.hasError('required')">La descripción es obligatoria.</div>
-      <div class="error" *ngIf="form.get('description')?.hasError('multipleSpaces')">No se permiten múltiples espacios.</div>
+      <label for="description">Descripción <span class="required">*</span></label>
+      <textarea id="description" formControlName="description" rows="3" placeholder="Ingrese una descripción del producto"></textarea>
+      <div class="error" *ngIf="form.get('description')?.invalid && form.get('description')?.touched">
+        <span *ngIf="form.get('description')?.hasError('required')">La descripción es obligatoria.</span>
+        <span *ngIf="form.get('description')?.hasError('minlength')">Mínimo 5 caracteres.</span>
+        <span *ngIf="form.get('description')?.hasError('maxlength')">Máximo 160 caracteres.</span>
+        <span *ngIf="form.get('description')?.hasError('multipleSpaces')">No se permiten múltiples espacios.</span>
+      </div>
     </div>
 
     <!-- Volumen / Unidad / Stock / Precio -->
     <div class="form-row">
       <div class="form-group">
-        <label for="volumeWeight">Volumen/Peso</label>
-        <input id="volumeWeight" type="number" step="0.01" formControlName="volumeWeight" />
-        <div class="error" *ngIf="form.get('volumeWeight')?.hasError('required')">Campo obligatorio.</div>
+        <label for="volumeWeight">Volumen/Peso <span class="required">*</span></label>
+        <input id="volumeWeight" type="number" step="0.01" formControlName="volumeWeight" placeholder="0.00" />
+        <div class="error" *ngIf="form.get('volumeWeight')?.invalid && form.get('volumeWeight')?.touched">
+          <span *ngIf="form.get('volumeWeight')?.hasError('required')">Campo obligatorio.</span>
+          <span *ngIf="form.get('volumeWeight')?.hasError('min')">Debe ser mayor a 0.</span>
+        </div>
       </div>
 
       <div class="form-group">
-        <label for="unitMeasure">Unidad de Medida</label>
-        <select id="unitMeasure" formControlName="unitMeasure" required>
+        <label for="unitMeasure">Unidad de Medida <span class="required">*</span></label>
+        <select id="unitMeasure" formControlName="unitMeasure">
           <option value="">Seleccione...</option>
           <option value="Kilogramos">Kilogramos</option>
           <option value="Gramos">Gramos</option>
@@ -56,26 +66,38 @@
           <option value="Cajas">Cajas</option>
           <option value="Paquetes">Paquetes</option>
         </select>
+        <div class="error" *ngIf="form.get('unitMeasure')?.invalid && form.get('unitMeasure')?.touched">
+          <span *ngIf="form.get('unitMeasure')?.hasError('required')">Seleccione una unidad.</span>
+        </div>
       </div>
 
       <div class="form-group">
-        <label for="stock">Stock</label>
-        <input id="stock" type="number" formControlName="stock" />
-        <div class="error" *ngIf="form.get('stock')?.hasError('min')">Debe ser mayor a 0.</div>
+        <label for="stock">Stock <span class="required">*</span></label>
+        <input id="stock" type="number" formControlName="stock" placeholder="1" />
+        <div class="error" *ngIf="form.get('stock')?.invalid && form.get('stock')?.touched">
+          <span *ngIf="form.get('stock')?.hasError('required')">Campo obligatorio.</span>
+          <span *ngIf="form.get('stock')?.hasError('min')">Debe ser mayor a 0.</span>
+          <span *ngIf="form.get('stock')?.hasError('pattern')">Solo números enteros.</span>
+        </div>
       </div>
 
       <div class="form-group">
-        <label for="price">Precio</label>
-        <input id="price" type="number" formControlName="price" step="0.01" />
-        <div class="error" *ngIf="form.get('price')?.hasError('min')">Debe ser mayor a 0.</div>
+        <label for="price">Precio <span class="required">*</span></label>
+        <input id="price" type="number" formControlName="price" step="0.01" placeholder="0.00" />
+        <div class="error" *ngIf="form.get('price')?.invalid && form.get('price')?.touched">
+          <span *ngIf="form.get('price')?.hasError('required')">Campo obligatorio.</span>
+          <span *ngIf="form.get('price')?.hasError('min')">Debe ser mayor a 0.</span>
+          <span *ngIf="form.get('price')?.hasError('max')">Máximo 10,000.</span>
+          <span *ngIf="form.get('price')?.hasError('pattern')">Formato inválido (ej: 10.50).</span>
+        </div>
       </div>
     </div>
 
     <!-- Categoría + Fecha -->
     <div class="form-row">
       <div class="form-group">
-        <label for="category">Categoría</label>
-        <select id="category" formControlName="category" required>
+        <label for="category">Categoría <span class="required">*</span></label>
+        <select id="category" formControlName="category">
           <option value="">Seleccione...</option>
           <option value="Alimentos">Alimentos</option>
           <option value="Bebidas">Bebidas</option>
@@ -84,14 +106,19 @@
           <option value="Hogar">Hogar</option>
           <option value="Otros">Otros</option>
         </select>
+        <div class="error" *ngIf="form.get('category')?.invalid && form.get('category')?.touched">
+          <span *ngIf="form.get('category')?.hasError('required')">Seleccione una categoría.</span>
+        </div>
       </div>
 
       <div class="form-group">
         <label for="expirationDate">Fecha de Vencimiento</label>
         <input id="expirationDate" type="date" formControlName="expirationDate" />
-        <div class="error" *ngIf="form.get('expirationDate')?.hasError('futureDate')">Debe tener mínimo 30 días.</div>
-        <div class="error" *ngIf="form.get('expirationDate')?.hasError('tooFarDate')">Máximo 5 años.</div>
-        <div class="error" *ngIf="form.get('expirationDate')?.hasError('noSunday')">No puede ser domingo.</div>
+        <div class="error" *ngIf="form.get('expirationDate')?.invalid && form.get('expirationDate')?.touched">
+          <span *ngIf="form.get('expirationDate')?.hasError('futureDate')">Debe tener mínimo 30 días.</span>
+          <span *ngIf="form.get('expirationDate')?.hasError('tooFarDate')">Máximo 5 años.</span>
+          <span *ngIf="form.get('expirationDate')?.hasError('noSunday')">No puede ser domingo.</span>
+        </div>
       </div>
     </div>
   </div>
