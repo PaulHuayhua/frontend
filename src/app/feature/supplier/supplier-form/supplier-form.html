@@ -1,0 +1,143 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="proveedor-container">
+  <!-- TÍTULO -->
+  <h2 class="form-title">
+    {{ isEditMode ? 'Modificar Proveedor' : 'Agregar Proveedor' }}
+  </h2>
+
+  <!-- DIVISOR -->
+  <hr class="custom-divider" />
+
+  <!-- SECCIÓN DATOS -->
+  <div class="section-header">
+    <mat-icon>business</mat-icon>
+    <span>Datos del Proveedor</span>
+  </div>
+
+  <div class="form-container">
+
+    <!-- Código (solo en edición) -->
+    <div *ngIf="isEditMode" class="full-width">
+      <label for="code">N° Código</label>
+      <input id="code" type="text" class="input" formControlName="code" readonly />
+    </div>
+
+    <!-- Empresa -->
+    <div class="full-width">
+      <label for="company">Empresa</label>
+      <input id="company" type="text" class="input" formControlName="company" autocomplete="off" required />
+      <div class="error" *ngIf="form.get('company')?.touched && form.get('company')?.invalid">
+        <span *ngIf="form.get('company')?.hasError('required')">
+          La razón social es obligatoria
+        </span>
+        <span *ngIf="form.get('company')?.hasError('uniqueCompany')">
+          Ya existe una razon social con ese nombre.
+        </span>
+      </div>
+    </div>
+
+    <!-- Dirección + Email -->
+    <div class="form-row">
+      <div class="form-group">
+        <label for="address">Dirección</label>
+        <input id="address" type="text" class="input" formControlName="address" autocomplete="off" required />
+        <div class="error" *ngIf="form.get('address')?.touched && form.get('address')?.hasError('required')">
+          La dirección es obligatoria
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email_business">Email</label>
+        <input id="email_business" type="email" class="input" formControlName="email_business" type="email"
+          autocomplete="off" required />
+        <div class="error" *ngIf="form.get('email_business')?.touched && form.get('email_business')?.invalid">
+          <span *ngIf="form.get('email_business')?.hasError('required')">
+            El correo es obligatorio
+          </span>
+          <span *ngIf="form.get('email_business')?.hasError('pattern')">
+            Correo inválido
+          </span>
+          <span *ngIf="form.get('email_business')?.hasError('uniqueEmail')">
+            El correo ya existe.
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RUC + Celular -->
+    <div class="form-row">
+      <div class="form-group">
+        <label for="ruc">RUC</label>
+        <input id="ruc" type="text" class="input" formControlName="ruc" maxlength="11" (keypress)="onlyNumbers($event)"
+          required />
+        <div class="error" *ngIf="form.get('ruc')?.touched && form.get('ruc')?.invalid">
+          <span *ngIf="form.get('ruc')?.hasError('required')">
+            El RUC es obligatorio
+          </span>
+          <span *ngIf="form.get('ruc')?.hasError('pattern')">
+            Debe tener 11 dígitos
+          </span>
+          <span *ngIf="form.get('ruc')?.hasError('uniqueRuc')">
+            Este RUC ya existe.
+          </span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="cell_phone">N° Celular</label>
+        <input id="cell_phone" type="text" class="input" formControlName="cell_phone" maxlength="9"
+          (keypress)="onlyNumbers($event)" required />
+        <div class="error" *ngIf="form.get('cell_phone')?.touched && form.get('cell_phone')?.invalid">
+          <span *ngIf="form.get('cell_phone')?.hasError('required')">
+            El celular es obligatorio
+          </span>
+          <span *ngIf="form.get('cell_phone')?.hasError('pattern')">
+            Debe tener 9 dígitos y empezar con 9
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Categoría + Fecha -->
+    <div class="form-row">
+      <div class="form-group">
+        <label for="category">Categoría</label>
+        <select id="category" class="input" formControlName="category" required>
+          <option value="Bebida">Bebida</option>
+          <option value="Gaseosa">Gaseosa</option>
+          <option value="Frutas">Frutas</option>
+          <option value="Snacks">Snacks</option>
+          <option value="Limpieza">Limpieza</option>
+        </select>
+        <div class="error" *ngIf="form.get('category')?.touched && form.get('category')?.hasError('required')">
+          La categoría es obligatoria
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="cooperation_date">Fecha de Cooperación</label>
+        <input id="cooperation_date" type="date" class="input" [min]="minDate" [max]="maxDate"
+          formControlName="cooperation_date" required />
+        <div class="error"
+          *ngIf="form.get('cooperation_date')?.touched && form.get('cooperation_date')?.hasError('required')">
+          La fecha de cooperación es obligatoria
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- BOTONES -->
+  <div class="button-group">
+    <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid" class="btn-primary">
+      {{ isEditMode ? 'Actualizar' : 'Registrar' }}
+    </button>
+    <button mat-raised-button type="button" (click)="onCancel()" class="btn-warn">
+      Cancelar
+    </button>
+  </div>
+</form>
+
+
+<app-alert [message]="alertMessage" [type]="alertType" [visible]="showAlert" [confirm]="confirmAlert"
+  (close)="showAlert = false" (confirmResult)="handleAlertConfirm($event)">
+</app-alert>

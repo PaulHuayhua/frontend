@@ -1,0 +1,165 @@
+<div class="page-container">
+  <h2 class="page-title">
+    {{ isEditMode ? 'Editar Venta' : 'Nueva Venta' }}
+  </h2>
+  <form [formGroup]="saleForm" (ngSubmit)="onSubmit()" class="form-card">
+    
+    <!-- Información General -->
+    <div class="section">
+      <h3 class="section-title">Información de la Venta</h3>
+      <div class="form-grid">
+        <!-- Cliente -->
+        <div class="form-group">
+          <label>Cliente *</label>
+          <select 
+            formControlName="customerIdentifier"
+            class="input">
+            <option value="">Seleccione un cliente</option>
+            <option *ngFor="let customer of customers" [value]="customer.identifier">
+              {{ customer.firstName }} {{ customer.lastName }} - {{ customer.documentNumber }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Usuario (readonly) -->
+        <div class="form-group">
+          <label>Empleado</label>
+          <input 
+            type="text" 
+            [value]="currentUserName"
+            class="input"
+            readonly
+            style="background-color: #f3f4f6; cursor: not-allowed;">
+          <input 
+            type="hidden" 
+            formControlName="userIdentifier">
+        </div>
+
+        <!-- Método de Pago -->
+        <div class="form-group">
+          <label>Método de Pago *</label>
+          <select 
+            formControlName="paymentMethod"
+            class="input">
+            <option value="">Seleccione</option>
+            <option value="Efectivo">Efectivo</option>
+            <option value="Tarjeta">Tarjeta</option>
+            <option value="Transferencia">Transferencia</option>
+            <option value="Yape">Yape</option>
+            <option value="Plin">Plin</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Detalles de la venta -->
+    <div class="section">
+      <div class="section-header">
+        <h3 class="section-title">Detalles de la Venta</h3>
+        <button 
+          type="button"
+          (click)="addDetail()"
+          class="btn-add">
+          + Agregar Producto
+        </button>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="details-table">
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Cantidad</th>
+              <th>Stock Disponible</th>
+              <th>Subtotal</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody formArrayName="details">
+            <tr *ngFor="let detail of details.controls; let i = index" [formGroupName]="i">
+              <td>
+                <select 
+                  formControlName="productIdentifier"
+                  (change)="onProductChange(i)"
+                  class="input">
+                  <option value="">Seleccione producto</option>
+                  <option *ngFor="let product of products" [value]="product.identifier">
+                    {{ product.name }} - S/ {{ product.price }}
+                  </option>
+                </select>
+              </td>
+              
+              <td>
+                <input 
+                  type="number" 
+                  formControlName="amount"
+                  (input)="onAmountChange(i)"
+                  min="1"
+                  class="input small">
+              </td>
+
+              <td class="text-center">
+                <span class="stock-indicator"
+                  [class.stock-high]="detail.get('stockAvailable')?.value > 10"
+                  [class.stock-medium]="detail.get('stockAvailable')?.value <= 10 && detail.get('stockAvailable')?.value > 0"
+                  [class.stock-low]="detail.get('stockAvailable')?.value === 0">
+                  {{ detail.get('stockAvailable')?.value || 0 }}
+                </span>
+              </td>
+
+              <td class="text-right subtotal">
+                S/ {{ detail.get('subtotal')?.value?.toFixed(2) || '0.00' }}
+              </td>
+
+              <td class="text-center">
+                <button 
+                  type="button"
+                  (click)="removeDetail(i)"
+                  class="btn-delete">
+                  Eliminar
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Total -->
+      <div class="total-container">
+        <div class="total-box">
+          <span class="label">Total de la Venta:</span>
+          <span class="total-amount">S/ {{ calculateTotal().toFixed(2) }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botones de acción -->
+    <div class="actions">
+      <button 
+        type="button"
+        (click)="cancel()"
+        class="btn-secondary">
+        Cancelar
+      </button>
+      
+      <button 
+        type="submit"
+        [disabled]="saleForm.invalid"
+        class="btn-primary">
+        {{ isEditMode ? 'Actualizar' : 'Guardar' }} Venta
+      </button>
+    </div>
+  </form>
+
+  <!-- Componente de alerta CON inputs/outputs como en compras -->
+  <app-alert 
+    [message]="alertMessage" 
+    [type]="alertType" 
+    [visible]="showAlert" 
+    [confirm]="confirmAlert"
+    (close)="showAlert = false" 
+    (confirmResult)="handleAlertConfirm($event)">
+  </app-alert>
+</div>

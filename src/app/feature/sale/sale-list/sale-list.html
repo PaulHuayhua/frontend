@@ -1,0 +1,201 @@
+<div class="sales-page">
+
+  <!-- HEADER -->
+  <div class="sales-header">
+    <h2>Listado de Ventas</h2>
+    <button appColors (click)="newSale()" class="btn-primary">
+      <mat-icon>add</mat-icon>
+      Nueva Venta
+    </button>
+  </div>
+
+  <!-- CARTAS Y FILTROS -->
+  <div class="top-section">
+
+    <!-- Cartas resumen -->
+    <div class="cards-container">
+
+      <div class="card-item wine">
+        <div class="card-content">
+          <div>
+            <h4>Total de Ventas</h4>
+            <p class="number">{{ filteredSales.length }}</p>
+            <span class="desc">Ventas registradas</span>
+          </div>
+
+          <mat-icon class="icon">storefront</mat-icon>
+        </div>
+      </div>
+
+      <div class="card-item gold">
+        <div class="card-content">
+          <div>
+            <h4>Completadas</h4>
+            <p class="number">{{ getCountByState('F') }}</p>
+            <span class="desc">Ventas completadas</span>
+          </div>
+
+          <mat-icon class="icon">check_circle</mat-icon>
+        </div>
+      </div>
+
+      <div class="card-item wine-light">
+        <div class="card-content">
+          <div>
+            <h4>Pendientes</h4>
+            <p class="number">{{ getCountByState('P') }}</p>
+            <span class="desc">Ventas pendientes</span>
+          </div>
+
+          <mat-icon class="icon">pending_actions</mat-icon>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Filtros -->
+    <div class="sales-filters">
+      <div class="filter-grid">
+        <div class="filter-item">
+          <label>Estado</label>
+          <select [(ngModel)]="filterState" (change)="applyFilters()">
+            <option value="">Todos</option>
+            <option value="P">Pendiente</option>
+            <option value="F">Completada</option>
+            <option value="C">Cancelada</option>
+          </select>
+        </div>
+
+        <div class="filter-item">
+          <label>Usuario</label>
+          <select [(ngModel)]="filterUser" (change)="applyFilters()">
+            <option value="">Todos</option>
+            <option *ngFor="let user of users" [value]="user.identifier">
+              {{ user.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="filter-item">
+          <label>Buscar por código</label>
+          <input type="text" [(ngModel)]="searchCode" (input)="applyFilters()" placeholder="Ej: SALE-0001">
+        </div>
+
+        <div class="filter-item">
+          <button (click)="clearFilters()" class="btn-clear">
+            <mat-icon>refresh</mat-icon>
+            Limpiar
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TABLA EN CONTENEDOR BLANCO -->
+  <div class="table-container">
+    <div class="sales-table">
+      <div class="table-wrapper">
+        <table>
+          <thead appColors>
+            <tr>
+              <!-- Columnas ordenables SIN iconos -->
+              <th (click)="sortBy('code')" class="sortable">
+                Código
+              </th>
+              
+              <th (click)="sortBy('customerIdentifier')" class="sortable">
+                Cliente
+              </th>
+              
+              <th (click)="sortBy('userIdentifier')" class="sortable">
+                Usuario
+              </th>
+              
+              <th (click)="sortBy('issueDate')" class="sortable">
+                Fecha
+              </th>
+              
+              <th (click)="sortBy('total')" class="sortable">
+                Total
+              </th>
+              
+              <th (click)="sortBy('paymentMethod')" class="sortable">
+                Método de Pago
+              </th>
+              
+              <th (click)="sortBy('state')" class="sortable">
+                Estado
+              </th>
+              
+              <th>Acciones</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let item of filteredSales"
+                [class.pending]="item.state === 'P'"
+                [class.completed]="item.state === 'F'"
+                [class.cancelled]="item.state === 'C'">
+
+              <td>{{ item.code }}</td>
+              <td>{{ getCustomerName(item.customerIdentifier) }}</td>
+              <td>{{ getUserName(item.userIdentifier) }}</td>
+              <td>{{ item.issueDate | friendlyDate }}</td>
+              <td class="total">{{ item.total | penCurrency }}</td>
+              <td>{{ item.paymentMethod || '-' }}</td>
+              <td>
+                <span class="status" [ngClass]="{
+                  'status-pending': item.state === 'P',
+                  'status-completed': item.state === 'F',
+                  'status-cancelled': item.state === 'C'
+                }">{{ getStateName(item.state) }}</span>
+              </td>
+              <td class="actions">
+                <button (click)="viewSale(item.identifier!)" class="btn-action" title="Ver">
+                  <mat-icon>visibility</mat-icon>
+                </button>
+                <button *ngIf="item.state === 'P'" (click)="editSale(item.identifier!)" class="btn-action" title="Editar">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button *ngIf="item.state === 'P'" (click)="completeSale(item.identifier!)" class="btn-action" title="Completar">
+                  <mat-icon>check_circle</mat-icon>
+                </button>
+                <button *ngIf="item.state === 'P'" (click)="cancelSale(item.identifier!)" class="btn-action" title="Cancelar">
+                  <mat-icon>cancel</mat-icon>
+                </button>
+                <button *ngIf="item.state === 'C'" (click)="restoreSale(item.identifier!)" class="btn-action" title="Restaurar">
+                  <mat-icon>restore</mat-icon>
+                </button>
+                <button (click)="downloadPdf(item.customerIdentifier)" class="btn-action" title="PDF">
+                  <mat-icon>picture_as_pdf</mat-icon>
+                </button>
+              </td>
+            </tr>
+
+            <tr *ngIf="filteredSales.length === 0">
+              <td colspan="8" class="no-data">
+                <mat-icon class="icon">inventory_2</mat-icon>
+                <p>No hay ventas registradas</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Componente de alerta CON inputs/outputs como en compras -->
+<app-alert 
+  [message]="alertMessage" 
+  [type]="alertType" 
+  [visible]="showAlert" 
+  [confirm]="confirmAlert"
+  (close)="showAlert = false" 
+  (confirmResult)="handleAlertConfirm($event)">
+</app-alert>
+
+<!-- Router outlet para el modal -->
+<router-outlet></router-outlet>

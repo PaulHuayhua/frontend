@@ -2,13 +2,13 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Product } from '../interfaces/product';
 import { environment } from '../../../environments/environment';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
-  
+
   private http = inject(HttpClient);
   private urlBackEnd = `${environment.urlBackEnd}/v1/api/product`;
 
@@ -19,31 +19,38 @@ export class ProductService {
     this.selectedProductSubject.next(product);
   }
 
-  findAll() {
+  // ✅ Traer todos los productos
+  findAll(): Observable<Product[]> {
     return this.http.get<Product[]>(this.urlBackEnd);
   }
 
-  findById(id: number) {
+  // ✅ Traer producto por ID
+  findById(id: number): Observable<Product> {
     return this.http.get<Product>(`${this.urlBackEnd}/${id}`);
   }
 
-  save(product: Product) {
+  // ✅ Crear nuevo producto
+  save(product: Product): Observable<Product> {
     return this.http.post<Product>(`${this.urlBackEnd}/save`, product);
   }
 
-  update(id: number, product: Product) {
+  // ✅ Actualizar producto
+  update(id: number, product: Product): Observable<Product> {
     return this.http.put<Product>(`${this.urlBackEnd}/update/${id}`, product);
   }
 
-  updateState(id: number) {
+  // ✅ Desactivar producto
+  updateState(id: number): Observable<Product> {
     return this.http.patch<Product>(`${this.urlBackEnd}/delete/${id}`, {});
   }
 
-  restoreProduct(id: number) {
+  // ✅ Restaurar producto
+  restoreProduct(id: number): Observable<Product> {
     return this.http.patch<Product>(`${this.urlBackEnd}/restore/${id}`, {});
   }
 
-  reportPdf() {
+  // 🚀 Descargar PDF de productos
+  reportPdf(): Observable<Blob> {
     return this.http.get(`${this.urlBackEnd}/pdf`, { responseType: 'blob' });
   }
 }

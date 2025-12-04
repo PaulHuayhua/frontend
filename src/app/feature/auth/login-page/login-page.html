@@ -1,0 +1,21 @@
+<app-alert></app-alert>
+
+<div class="container">
+  <h1 class="title">Iniciar sesión</h1>
+
+  <form [formGroup]="loginForm" (ngSubmit)="login()">
+
+    <div>
+      <label for="name">Nombre de usuario</label>
+      <input formControlName="name" id="name" type="text" placeholder="Ingresa tu nombre">
+    </div>
+
+    <div>
+      <label for="passwordHash">Contraseña</label>
+      <input formControlName="passwordHash" id="passwordHash" type="password" placeholder="••••••••">
+    </div>
+
+    <button type="submit">Iniciar sesión</button>
+
+  </form>
+</div>

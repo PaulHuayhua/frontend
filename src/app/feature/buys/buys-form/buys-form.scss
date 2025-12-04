@@ -1,0 +1,360 @@
+.page-container {
+  padding: 16px;
+}
+
+// Header con título y badge
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.page-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #6d2423;
+  margin: 0;
+}
+
+// Badge de estado
+.status-badge {
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  
+  &.badge-registered {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+  }
+  
+  &.badge-cancelled {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+  }
+}
+
+// Formulario
+.form-card {
+  background: #fff;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid #dcdcdc;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+}
+
+// Secciones
+.section {
+  margin-bottom: 16px;
+  background: #f5f5f5;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #dcdcdc;
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 18px;
+  color: #6d2423;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+// Grid de formulario
+.form-grid {
+  display: grid;
+  padding: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 12px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  
+  label {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #444;
+  }
+  
+  .error-msg {
+    color: #aa0000;
+    font-size: 12px;
+    margin-top: 4px;
+    display: block;
+  }
+}
+
+// Inputs
+.inputs {
+  padding: 6px 10px;
+  font-size: 14px;
+  height: 1.6rem;
+  border-radius: 6px;
+  color: #666;
+  border: 1px solid #dcdcdc;
+  background: #f9f9f9;
+  cursor: not-allowed;
+}
+
+.input {
+  padding: 6px 10px;
+  font-size: 14px;
+  height: 2.5rem;
+  border-radius: 6px;
+  border: 1px solid #dcdcdc;
+  background: #fff;
+  transition: border-color 0.2s;
+  
+  &:focus {
+    border-color: #6d2423;
+    outline: none;
+  }
+  
+  &:disabled {
+    background: #f9f9f9;
+    color: #666;
+    cursor: not-allowed;
+  }
+}
+
+.input_sma {
+  width: 100%;
+  max-width: 250px;
+  padding: 6px 10px;
+  height: 2.5rem;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #dcdcdc;
+  background: #fff;
+  
+  &:focus {
+    border-color: #6d2423;
+    outline: none;
+  }
+}
+
+.input_small {
+  width: 100%;
+  max-width: 150px;
+  padding: 0px 10px;
+  height: 2.5rem;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #dcdcdc;
+  background: #fff;
+  
+  &:focus {
+    border-color: #6d2423;
+    outline: none;
+  }
+}
+
+.divider {
+  margin: 16px 0;
+  border: none;
+  border-top: 1px solid #dcdcdc;
+}
+
+// Botón agregar
+.btn-add {
+  background: #6d2423;
+  color: #fff;
+  padding: 6px 12px;
+  border: none;
+  font-size: 14px;
+  height: 2.5rem;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+  
+  &:hover {
+    background: #561b1a;
+  }
+}
+
+// Tabla de detalles
+.table-wrapper {
+  overflow-x: auto;
+  margin-top: 0.5rem;
+  padding: 1rem;
+}
+
+.details-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 10px;
+  
+  thead {
+    background: #f3e4c8;
+    height: 2.5rem;
+    
+    th {
+      padding: 6px 8px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 16px;
+      color: #6d2423;
+      border-bottom: 1px solid #e2c89a;
+    }
+  }
+  
+  tbody {
+    tr {
+      border-bottom: 1px solid #ececec;
+      
+      &:hover {
+        background: #fafafa;
+      }
+    }
+    
+    td {
+      padding: 8px;
+      font-size: 13px;
+      vertical-align: top;
+      
+      &.subtotal {
+        font-weight: 700;
+        text-align: right;
+        color: #333;
+      }
+      
+      &.text-center {
+        text-align: center;
+      }
+      
+      &.empty-row {
+        padding: 20px;
+        color: #999;
+        font-style: italic;
+      }
+    }
+  }
+}
+
+// Botón eliminar
+.btn-delete {
+  background: transparent;
+  border: none;
+  color: #aa0000;
+  cursor: pointer;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s;
+  
+  &:hover {
+    background: #fee;
+    color: #7a0000;
+  }
+}
+
+// Total
+.total-container {
+  margin-top: 14px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.total-box {
+  background: #fffaf2;
+  border: 1px solid #e2c99b;
+  padding: 12px 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  
+  .label {
+    color: #6d2423;
+    font-weight: 600;
+    font-size: 16px;
+  }
+  
+  .total-amount {
+    font-weight: 700;
+    font-size: 20px;
+    color: #333;
+  }
+}
+
+// Botones de acción
+.actions {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.btn-secondary {
+  background: #ccc;
+  color: #333;
+  padding: 10px 20px;
+  border: none;
+  font-size: 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  
+  &:hover {
+    background: #b5b5b5;
+  }
+}
+
+.btn-primary {
+  background: #d4a055;
+  color: #4a3a18;
+  padding: 10px 20px;
+  border: none;
+  font-size: 16px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  
+  &:hover:not(:disabled) {
+    background: #c29147;
+  }
+  
+  &:disabled {
+    background: #e0e0e0;
+    color: #999;
+    cursor: not-allowed;
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .table-wrapper {
+    padding: 0.5rem;
+  }
+  
+  .input_sma,
+  .input_small {
+    max-width: 100%;
+  }
+}

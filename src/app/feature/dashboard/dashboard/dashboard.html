@@ -1,0 +1,243 @@
+<div class="dashboard-container">
+  <!-- Header Section -->
+  <div class="dashboard-header">
+    <div class="welcome-section">
+      <h1>Dashboard</h1>
+      <p class="subtitle">Resumen general del sistema</p>
+    </div>
+    <div class="date-info">
+      <span class="date">{{ currentDate | date:'dd/MM/yyyy' }}</span>
+    </div>
+  </div>
+
+  <!-- Statistics Cards -->
+  <div class="stats-grid">
+    <!-- Ventas - Visible para Administrador y Empleado -->
+    <div class="stat-card stat-sales" *hasRole="['Administrador','Empleado']">
+      <div class="stat-icon">
+        <span class="material-icons">payments</span>
+      </div>
+      <div class="stat-content">
+        <h3>Ventas Totales</h3>
+        <p class="stat-number">{{ totalSales | penCurrency }}</p>
+        <span class="stat-trend" [class.positive]="salesGrowth > 0" [class.negative]="salesGrowth < 0">
+          <span class="material-icons">{{ salesGrowth >= 0 ? 'trending_up' : 'trending_down' }}</span>
+          {{ salesGrowth >= 0 ? '+' : '' }}{{ salesGrowth | number:'1.1-1' }}%
+        </span>
+      </div>
+    </div>
+
+    <!-- Productos - Visible para Administrador y Empleado -->
+    <div class="stat-card stat-products" *hasRole="['Administrador','Empleado']">
+      <div class="stat-icon">
+        <span class="material-icons">inventory_2</span>
+      </div>
+      <div class="stat-content">
+        <h3>Productos en Stock</h3>
+        <p class="stat-number">{{ totalProducts }}</p>
+        <span class="stat-trend" [class.warning]="lowStockProducts.length > 0">
+          <span class="material-icons">{{ lowStockProducts.length > 0 ? 'warning' : 'check_circle' }}</span>
+          {{ lowStockProducts.length > 0 ? lowStockProducts.length + ' bajos' : 'Óptimo' }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Compras - SOLO Administrador -->
+    <div class="stat-card stat-buys" *hasRole="'Administrador'">
+      <div class="stat-icon">
+        <span class="material-icons">local_shipping</span>
+      </div>
+      <div class="stat-content">
+        <h3>Compras del Mes</h3>
+        <p class="stat-number">{{ totalBuys }}</p>
+        <span class="stat-trend neutral">
+          <span class="material-icons">shopping_cart</span>
+          {{ totalBuysAmount | penCurrency }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="quick-actions-section">
+    <div class="quick-actions-grid">
+      <!-- Nueva Venta - Administrador y Empleado -->
+      <button class="quick-action-btn" *hasRole="['Administrador','Empleado']" (click)="navigateTo('/sales')">
+        <span class="material-icons">add_shopping_cart</span>
+        <span>Nueva Venta</span>
+      </button>
+
+      <!-- Nueva Compra - SOLO Administrador -->
+      <button class="quick-action-btn" *hasRole="'Administrador'" (click)="navigateTo('/buys')">
+        <span class="material-icons">shopping_bag</span>
+        <span>Nueva Compra</span>
+      </button>
+
+      <!-- Nuevo Producto - Administrador y Empleado -->
+      <button class="quick-action-btn" *hasRole="['Administrador','Empleado']" (click)="navigateTo('/products')">
+        <span class="material-icons">add_box</span>
+        <span>Producto</span>
+      </button>
+
+      <!-- Nuevo Proveedor - SOLO Administrador -->
+      <button class="quick-action-btn" *hasRole="'Administrador'" (click)="navigateTo('/suppliers')">
+        <span class="material-icons">add_business</span>
+        <span>Proveedor</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Charts Section -->
+  <div class="charts-section">
+    <!-- Gráfico Ventas/Compras - Visible según rol -->
+    <div class="chart-card" *hasRole="['Administrador','Empleado']">
+      <div class="chart-header">
+        <h3 class="chart-title">
+          <span class="material-icons">show_chart</span>
+          <ng-container *hasRole="'Administrador'">Ventas y Compras - Últimos 6 Meses</ng-container>
+          <ng-container *hasRole="'Empleado'">Ventas - Últimos 6 Meses</ng-container>
+        </h3>
+      </div>
+      <canvas #salesChart></canvas>
+    </div>
+
+    <!-- Top Productos - Administrador y Empleado -->
+    <div class="chart-card" *hasRole="['Administrador','Empleado']">
+      <div class="chart-header">
+        <h3 class="chart-title">
+          <span class="material-icons">bar_chart</span>
+          Top 5 Productos Más Vendidos
+        </h3>
+        <span class="chart-total">{{ topProductsTotal }} unid.</span>
+      </div>
+      <canvas #productsChart></canvas>
+    </div>
+  </div>
+
+  <!-- Recent Activities -->
+  <div class="recent-activities">
+    <div class="activities-grid">
+      <!-- Últimas Ventas - Administrador y Empleado -->
+      <div class="activity-card" *hasRole="['Administrador','Empleado']">
+        <h3 class="activity-title">
+          <span class="material-icons">receipt_long</span>
+          Últimas Ventas
+          <span class="badge">{{ recentSales.length }}</span>
+        </h3>
+        <div class="activity-list" *ngIf="recentSales.length > 0; else noSales">
+          <div class="activity-item" *ngFor="let sale of recentSales" (click)="navigateTo('/sales/view/' + sale.identifier)">
+            <div class="activity-info">
+              <span class="activity-code">{{ sale.code || 'N/A' }}</span>
+              <span class="activity-customer">{{ sale.customerName || 'Cliente' }}</span>
+            </div>
+            <div class="activity-meta">
+              <span class="activity-amount">{{ sale.total | penCurrency }}</span>
+              <span class="activity-date">{{ sale.issueDate | friendlyDate }}</span>
+            </div>
+          </div>
+        </div>
+        <ng-template #noSales>
+          <p class="no-data">No hay ventas recientes</p>
+        </ng-template>
+      </div>
+
+      <!-- Stock Bajo - Administrador y Empleado -->
+      <div class="activity-card" *hasRole="['Administrador','Empleado']">
+        <h3 class="activity-title">
+          <span class="material-icons">warning</span>
+          Stock Bajo
+          <span class="badge warning">{{ lowStockProducts.length }}</span>
+        </h3>
+        <div class="activity-list" *ngIf="lowStockProducts.length > 0; else noLowStock">
+          <div class="activity-item warning" *ngFor="let product of lowStockProducts" (click)="navigateTo('/products/edit/' + product.identifier)">
+            <div class="activity-info">
+              <span class="activity-name">{{ product.name }}</span>
+              <span class="activity-category">{{ product.category }}</span>
+            </div>
+            <div class="activity-meta">
+              <span class="stock-badge" [class.critical]="product.stock < 5" [class.low]="product.stock >= 5">
+                {{ product.stock }} unid.
+              </span>
+            </div>
+          </div>
+        </div>
+        <ng-template #noLowStock>
+          <p class="no-data success">Stock óptimo</p>
+        </ng-template>
+      </div>
+
+      <!-- Últimas Compras - SOLO Administrador -->
+      <div class="activity-card" *hasRole="'Administrador'">
+        <h3 class="activity-title">
+          <span class="material-icons">shopping_basket</span>
+          Últimas Compras
+          <span class="badge">{{ recentBuys.length }}</span>
+        </h3>
+        <div class="activity-list" *ngIf="recentBuys.length > 0; else noBuys">
+          <div class="activity-item" *ngFor="let buy of recentBuys" (click)="navigateTo('/buys/view/' + buy.identifier)">
+            <div class="activity-info">
+              <span class="activity-code">{{ buy.code || 'N/A' }}</span>
+              <span class="activity-supplier">{{ getSupplierName(buy.supplier_identifier) }}</span>
+            </div>
+            <div class="activity-meta">
+              <span class="activity-amount">{{ buy.totalPrice | penCurrency }}</span>
+              <span class="activity-date">{{ buy.buysDate | friendlyDate }}</span>
+            </div>
+          </div>
+        </div>
+        <ng-template #noBuys>
+          <p class="no-data">No hay compras recientes</p>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary Section -->
+  <div class="summary-section">
+    <div class="summary-grid">
+      <!-- Venta Promedio - Administrador y Empleado -->
+      <div class="summary-item" *hasRole="['Administrador','Empleado']">
+        <span class="summary-icon">
+          <span class="material-icons">trending_up</span>
+        </span>
+        <div class="summary-content">
+          <span class="summary-label">Venta Promedio</span>
+          <span class="summary-value">{{ averageSale | penCurrency }}</span>
+        </div>
+      </div>
+
+      <!-- Compra Promedio - SOLO Administrador -->
+      <div class="summary-item" *hasRole="'Administrador'">
+        <span class="summary-icon">
+          <span class="material-icons">monetization_on</span>
+        </span>
+        <div class="summary-content">
+          <span class="summary-label">Compra Promedio</span>
+          <span class="summary-value">{{ averageBuy | penCurrency }}</span>
+        </div>
+      </div>
+
+      <!-- Valor Stock - Administrador y Empleado -->
+      <div class="summary-item" *hasRole="['Administrador','Empleado']">
+        <span class="summary-icon">
+          <span class="material-icons">inventory</span>
+        </span>
+        <div class="summary-content">
+          <span class="summary-label">Valor Stock</span>
+          <span class="summary-value">{{ totalStockValue | penCurrency }}</span>
+        </div>
+      </div>
+
+      <!-- Proveedores - SOLO Administrador -->
+      <div class="summary-item" *hasRole="'Administrador'">
+        <span class="summary-icon">
+          <span class="material-icons">business</span>
+        </span>
+        <div class="summary-content">
+          <span class="summary-label">Proveedores</span>
+          <span class="summary-value">{{ topSuppliers.length }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

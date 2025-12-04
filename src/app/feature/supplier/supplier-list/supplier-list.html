@@ -1,0 +1,135 @@
+<div class="cont mat-elevation-z8">
+  <div class="alia">
+    <div class="txt">
+      <h2 class="title">Gestión de Proveedores</h2>
+      <p class="sub">Administra los proveedores</p>
+    </div>
+    <div class="fill">
+      <button appColors mat-raised-button class="btn-agregar" (click)="goSupplierForm()">
+        <mat-icon>add</mat-icon>Agregar Proveedor
+      </button>
+      <button appColors mat-raised-button class="btn-agregar" (click)="reportPdf()">
+        <mat-icon>picture_as_pdf</mat-icon>Generar Reporte
+      </button>
+    </div>
+  </div>
+
+  <div class="summary-cards">
+    <div class="card">
+      <div class="card-content">
+        <div class="text">
+          <h3>Total Proveedores</h3>
+          <p class="number">{{ totalSuppliers }}</p>
+          <span class="desc">Proveedores registrados</span>
+        </div>
+        <div class="icon"><mat-icon>apartment</mat-icon></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-content">
+        <div class="text">
+          <h3>Proveedores Activos</h3>
+          <p class="number">{{ totalActivos }}</p>
+          <span class="desc">Actualmente disponibles</span>
+        </div>
+        <div class="icon"><mat-icon>check_circle</mat-icon></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-content">
+        <div class="text">
+          <h3>Proveedores Inactivos</h3>
+          <p class="number">{{ totalInactivos }}</p>
+          <span class="desc">Fuera de servicio</span>
+        </div>
+        <div class="icon"><mat-icon>cancel</mat-icon></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="top-bar">
+    <!-- FILTRO TEXTO -->
+    <input matInput type="text" placeholder="Buscar proveedor" class="search-input" [(ngModel)]="textoFiltro" (keyup)="applyAllFilters()" />
+
+    <div class="right-actions">
+
+    <!-- FILTRO POR RUC -->
+    <input matInput type="text" placeholder="Filtrar por RUC" [(ngModel)]="rucFiltro" (keyup)="applyAllFilters()" class="search-input" style="width: 150px;" />
+
+      <!-- FILTRO POR CATEGORÍA -->
+      <select [(ngModel)]="categoriaFiltro" (change)="applyAllFilters()" class="catego">
+        <option value="todas">Todas las Categorías</option>
+        <option *ngFor="let cat of categorias" [value]="cat">{{ cat }}</option>
+      </select>
+
+      <!-- FILTRO POR ESTADO -->
+      <div class="state-toggle-filter">
+        <mat-button-toggle-group [(ngModel)]="estadoFiltro" (change)="applyAllFilters()" class="estado-toggle" name="estado" exclusive>
+          <mat-button-toggle value="todos">Todos</mat-button-toggle>
+          <mat-button-toggle value="A">Activos</mat-button-toggle>
+          <mat-button-toggle value="I">Inactivos</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="table-container">
+      <table class="custom-table">
+        <thead appColors>
+          <tr>
+            <th (click)="sortBy('code')">Código</th>
+            <th (click)="sortBy('company')">Empresa</th>
+            <th (click)="sortBy('category')">Categoría</th>
+            <th (click)="sortBy('address')">Dirección</th>
+            <th (click)="sortBy('email_business')">Email</th>
+            <th (click)="sortBy('cell_phone')">N° Celular</th>
+            <th (click)="sortBy('ruc')">RUC</th>
+            <th (click)="sortBy('cooperation_date')">Cooperación</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let supplier of filteredSuppliers">
+            <td>{{ supplier.code }}</td>
+            <td>{{ supplier.company | titlecase }}</td>
+            <td>{{ supplier.category }}</td>
+            <td>{{ supplier.address }}</td>
+            <td>{{ supplier.email_business }}</td>
+            <td>{{ supplier.cell_phone | cellNumber }}</td>
+            <td>{{ supplier.ruc }}</td>
+            <td>{{ supplier.cooperation_date | friendlyDate }}</td>
+            <td>
+              <span [ngClass]="supplier.state === 'A' ? 'estado-activo' : 'estado-inactivo'">
+                {{ supplier.state === 'A' ? 'Activo' : 'Inactivo' }}
+              </span>
+            </td>
+            <td>
+              <div class="acciones-contenedor">
+                <button class="btn-system" (click)="onEdit(supplier)" [disabled]="supplier.state !== 'A'">
+                  <mat-icon>edit</mat-icon>
+                </button>
+
+                <button *ngIf="supplier.state === 'A'" class="btn-system btn-delete" (click)="onDelete(supplier.identifier)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+
+                <button *ngIf="supplier.state !== 'A'" class="btn-system btn-restore" (click)="onRestore(supplier.identifier)">
+                  <mat-icon>restore</mat-icon>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <app-alert [message]="alertMessage" [type]="alertType" [visible]="showAlert" [confirm]="confirmAlert"
+    (close)="showAlert = false" (confirmResult)="handleAlertConfirm($event)">
+  </app-alert>
+</div>

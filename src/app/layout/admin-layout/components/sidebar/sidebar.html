@@ -8,19 +8,19 @@
       <span class="material-icons">dashboard</span>
       <span *ngIf="expanded">Dashboard</span>
     </a>
-    <a routerLink="/sale-list" routerLinkActive="active">
+    <a routerLink="/sales" routerLinkActive="active" *hasRole="['Administrador', 'Empleado']">
       <span class="material-icons">point_of_sale</span>
       <span *ngIf="expanded">Venta</span>
     </a>
-    <a routerLink="/buy-list" routerLinkActive="active">
+    <a routerLink="/buys" routerLinkActive="active" *hasRole="'Administrador'">
       <span class="material-icons">shopping_cart</span>
       <span *ngIf="expanded">Compras</span>
     </a>
-    <a routerLink="product-list" routerLinkActive="active">
+    <a routerLink="products" routerLinkActive="active" *hasRole="['Administrador', 'Empleado']">
       <span class="material-icons">inventory_2</span>
       <span *ngIf="expanded">Productos</span>
     </a>
-    <a routerLink="/supplier-list" routerLinkActive="active">
+    <a routerLink="/suppliers" routerLinkActive="active" *hasRole="'Administrador'">
       <span class="material-icons">local_shipping</span>
       <span *ngIf="expanded">Proveedores</span>
     </a>

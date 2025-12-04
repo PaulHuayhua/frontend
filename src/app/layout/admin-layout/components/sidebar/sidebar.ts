@@ -1,11 +1,12 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { HasRoleDirective } from '../../../../core/directives/has-role';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, HasRoleDirective],
   templateUrl: './sidebar.html',
   styleUrls: ['./sidebar.scss'],
 })

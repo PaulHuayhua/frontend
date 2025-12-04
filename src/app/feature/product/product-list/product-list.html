@@ -1,15 +1,14 @@
 <div class="dashboard-header">
-
   <div class="header-top">
-    <!-- Título y subtítulo -->
+    <!-- 🧾 Título -->
     <div class="title-container">
       <h2 class="title">Gestión de Inventario</h2>
       <p class="subtitle">Controla tu stock y productos</p>
     </div>
 
-    <!-- Botones de acción -->
+    <!-- 🔘 Botones principales -->
     <div class="header-buttons">
-      <button class="btn-nuevo" routerLink="/product-form">
+      <button class="btn-nuevo" routerLink="form">
         <mat-icon>add</mat-icon> Agregar Producto
       </button>
       <button class="btn-nuevo secondary" (click)="reportPdf()">
@@ -18,7 +17,7 @@
     </div>
   </div>
 
-  <!-- Cards resumen -->
+  <!-- 📊 Tarjetas resumen -->
   <div class="cards-container">
     <div class="card">
       <mat-icon>inventory_2</mat-icon>
@@ -28,14 +27,7 @@
         <small>Productos registrados</small>
       </div>
     </div>
-    <div class="card">
-      <mat-icon class="icon-green">check_circle</mat-icon>
-      <div>
-        <h3>Productos Activos</h3>
-        <p>{{ productosActivos }}</p>
-        <small>En catálogo</small>
-      </div>
-    </div>
+
     <div class="card">
       <mat-icon class="icon-yellow">warning</mat-icon>
       <div>
@@ -52,48 +44,56 @@
         <small>Productos agotados</small>
       </div>
     </div>
-    <div class="card">
-      <mat-icon class="icon-blue">attach_money</mat-icon>
-      <div>
-        <h3>Valor Total</h3>
-        <p>S/ {{ valorTotal | number:'1.2-2' }}</p>
-        <small>Inventario valorizado</small>
-      </div>
-    </div>
   </div>
 </div>
 
+<!-- 🧩 Lista de productos -->
 <div class="product-list-container">
-
-
   <div class="top-bar">
     <input
       type="text"
-      placeholder="Buscar producto"
+      placeholder="Buscar producto..."
       class="search-input"
       (keyup)="applyFilter($event)"
     />
 
     <div class="right-actions">
+      <!-- 🔹 Filtro por categoría -->
+      <div class="category-filter">
+        <select [(ngModel)]="categoriaFiltro" (change)="applyAllFilters()">
+          <option value="todas">Todas las categorías</option>
+          <option *ngFor="let categoria of categorias" [value]="categoria">
+            {{ categoria }}
+          </option>
+        </select>
+      </div>
 
+      <!-- 🔹 Filtro por stock -->
+      <div class="stock-filter">
+        <select [(ngModel)]="stockFiltro" (change)="applyAllFilters()">
+          <option value="todos">Todos</option>
+          <option value="bajo">Stock Bajo (≤5)</option>
+          <option value="sin">Sin Stock (0)</option>
+          <option value="suficiente">Suficiente (>5)</option>
+        </select>
+      </div>
+
+      <!-- 🔘 Filtros de estado -->
       <div class="state-toggle-filter">
         <div class="estado-toggle">
           <button
             [class.active]="estadoFiltro === 'todos'"
-            (click)="estadoFiltro='todos'; filtrarPorEstado()"
-          >
+            (click)="estadoFiltro='todos'; applyAllFilters()">
             <mat-icon>list</mat-icon> Todos
           </button>
           <button
             [class.active]="estadoFiltro === 'activo'"
-            (click)="estadoFiltro='activo'; filtrarPorEstado()"
-          >
+            (click)="estadoFiltro='activo'; applyAllFilters()">
             <mat-icon>check_circle</mat-icon> Activos
           </button>
           <button
             [class.active]="estadoFiltro === 'inactivo'"
-            (click)="estadoFiltro='inactivo'; filtrarPorEstado()"
-          >
+            (click)="estadoFiltro='inactivo'; applyAllFilters()">
             <mat-icon>cancel</mat-icon> Inactivos
           </button>
         </div>
@@ -101,60 +101,59 @@
     </div>
   </div>
 
-<table class="product-table">
-  <thead>
-    <tr>
-      <th (click)="sortData('code')">Código</th>
-      <th (click)="sortData('name')">Producto</th>
-      <th (click)="sortData('description')">Descripción</th>
-      <th (click)="sortData('volumeWeight')">Tamaño</th>
-      <th (click)="sortData('stock')">Stock</th>
-      <th (click)="sortData('price')">Precio</th>
-      <th (click)="sortData('expirationDate')">Fecha V.</th>
-      <th (click)="sortData('category')">Categoría</th>
-      <th (click)="sortData('state')">Estado</th>
-      <th>Acciones</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let product of dataSource?.data">        
-      <td>{{ product.code }}</td>
-      <td>{{ product.name }}</td>
-      <td>{{ product.description }}</td>
-      <td>{{ product.volumeWeight }} {{ product.unitMeasure }}</td>
-      <td>{{ product.stock }}</td>
-      <td>{{ product.price | penCurrency }}</td>
-      <td>{{ product.expirationDate | friendlyDate }}</td>
-      <td>{{ product.category }}</td>
-      <td>
-        <span [ngClass]="product.state === 'A' ? 'estado-activo' : 'estado-inactivo'">
-          {{ product.state === 'A' ? 'Activo' : 'Inactivo' }}
-        </span>
-      </td>
-      <td>
-        <div class="acciones-contenedor">
-          <button class="btn-system" (click)="onEdit(product)" [disabled]="product.state !== 'A'">
-            <mat-icon>edit</mat-icon>
-          </button>
-          <button *ngIf="product.state === 'A'" class="btn-system" (click)="onDelete(product)">
-            <mat-icon>delete</mat-icon>
-          </button>
-          <button *ngIf="product.state !== 'A'" class="btn-system" (click)="onRestore(product)">
-            <mat-icon>restore</mat-icon>
-          </button>
-        </div>
-      </td>
-    </tr>
-  </tbody>
-</table>
+  <table class="product-table">
+    <thead appColors>
+      <tr>
+        <th (click)="sortData('code')">Código</th>
+        <th (click)="sortData('name')">Producto</th>
+        <th>Descripción</th>
+        <th (click)="sortData('volumeWeight')">Tamaño</th>
+        <th (click)="sortData('stock')">Stock</th>
+        <th (click)="sortData('price')">Precio</th>
+        <th (click)="sortData('expirationDate')">Fecha V.</th>
+        <th (click)="sortData('category')">Categoría</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let product of dataSource.data">
+        <td class="codigo">{{ product.code }}</td>
+        <td>{{ product.name }}</td>
+        <td>{{ product.description }}</td>
+        <td>{{ product.volumeWeight }} {{ product.unitMeasure }}</td>
+        <td>{{ product.stock }}</td>
+        <td>{{ product.price | penCurrency }}</td>
+        <td>{{ product.expirationDate | friendlyDate }}</td>
+        <td>{{ product.category }}</td>
+        <td>
+          <span [ngClass]="product.state==='A' ? 'estado-activo' : 'estado-inactivo'">
+            {{ product.state==='A' ? 'Activo' : 'Inactivo' }}
+          </span>
+        </td>
+        <td>
+          <div class="acciones-contenedor">
+            <button class="btn-system edit" (click)="onEdit(product)" [disabled]="product.state!=='A'">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button *ngIf="product.state==='A'" class="btn-system delete" (click)="onDelete(product)">
+              <mat-icon>delete</mat-icon>
+            </button>
+            <button *ngIf="product.state!=='A'" class="btn-system restore" (click)="onRestore(product)">
+              <mat-icon>restore</mat-icon>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
   <app-alert
     [message]="alertMessage"
     [type]="alertType"
     [visible]="showAlert"
     [confirm]="confirmAlert"
-    (close)="showAlert = false"
-    (confirmResult)="handleAlertConfirm($event)"
-  ></app-alert>
-
+    (close)="showAlert=false"
+    (confirmResult)="handleAlertConfirm($event)">
+  </app-alert>
 </div>

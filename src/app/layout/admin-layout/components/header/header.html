@@ -2,8 +2,12 @@
   <div class="welcome-message">
     Bienvenido de nuevo, <strong>{{ userName }}</strong>
   </div>
+
   <div class="user-info">
-    <img src="assets/profile-icon.png" alt="Perfil" class="profile-icon" />
+    <div class="avatar">
+      {{ initials }}
+    </div>
     <span class="user-name">{{ userName }}</span>
+    <button class="logout-btn" (click)="logout()">Cerrar sesión</button>
   </div>
 </header>

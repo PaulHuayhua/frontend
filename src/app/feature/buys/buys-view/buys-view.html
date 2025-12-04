@@ -1,0 +1,154 @@
+<!-- Overlay del modal -->
+<div class="modal-overlay" (click)="closeModal()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="loading-container">
+      <div class="spinner"></div>
+      <p>Cargando compra...</p>
+    </div>
+
+    <!-- Contenido del modal -->
+    <div *ngIf="!loading && buy" class="modal-content print-area">
+
+      <!-- Header -->
+      <div class="modal-header">
+        <div class="header-content">
+          <div class="header-info">
+            <h2>Detalle de Compra</h2>
+            <p class="code">{{ buy.code }}</p>
+          </div>
+
+          <div class="header-actions">
+            <span
+              class="state-badge"
+              [ngClass]="{
+                'state-received': buy.status === 'R',
+                'state-cancelled': buy.status === 'C'
+              }">
+              {{ getStatusName(buy.status) }}
+            </span>
+
+            <button class="btn-close" (click)="closeModal()" title="Cerrar">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- BODY (scrollable) -->
+      <div class="modal-body">
+
+        <!-- Información General -->
+        <div class="info-section">
+          <h3>Información General</h3>
+
+          <div class="info-grid">
+            <div class="info-item">
+              <p class="label">Fecha de Compra</p>
+              <p class="value">{{ buy.buysDate | friendlyDate }}</p>
+            </div>
+
+            <div class="info-item">
+              <p class="label">Proveedor</p>
+              <p class="value">{{ supplierName || 'Cargando...' }}</p>
+            </div>
+
+            <div class="info-item">
+              <p class="label">Usuario</p>
+              <p class="value">{{ userName || 'Cargando...' }}</p>
+            </div>
+
+            <div class="info-item">
+              <p class="label">Método de Pago</p>
+              <p class="value">{{ buy.payment_method }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Productos -->
+        <div class="products-section">
+          <h3>Productos</h3>
+
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Producto</th>
+                  <th class="text-center">Cantidad</th>
+                  <th class="text-right">Precio Unitario</th>
+                  <th class="text-right">Subtotal</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr *ngFor="let detail of buy.details">
+                  <td>
+                    <p class="product-name">
+                      {{ getProductName(detail.product_identifier) }}
+                    </p>
+                  </td>
+
+                  <td class="text-center">
+                    <strong>{{ detail.amount }}</strong>
+                  </td>
+
+                  <td class="text-right">
+                    {{ getProductPrice(detail.product_identifier) | penCurrency }}
+                  </td>
+
+                  <td class="text-right subtotal">
+                    {{ detail.subtotal | penCurrency }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Total -->
+          <div class="total-section">
+            <div class="total-box">
+              <div class="total-row">
+                <span class="label">Total:</span>
+                <span class="amount">{{ buy.totalPrice | penCurrency }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer">
+
+        <button class="btn-secondary" (click)="closeModal()">
+          <mat-icon>arrow_back</mat-icon>
+          Cerrar
+        </button>
+
+        <div class="action-buttons">
+
+          <button *ngIf="buy.status === 'R'" class="btn-edit" (click)="editBuy()">
+            <mat-icon>edit</mat-icon>
+            Editar
+          </button>
+
+          <button class="btn-pdf" (click)="downloadPdf()">
+            <mat-icon>picture_as_pdf</mat-icon>
+            Descargar PDF
+          </button>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Error -->
+    <div *ngIf="!loading && !buy" class="error-container">
+      <div class="icon">⚠️</div>
+      <p class="message">Compra no encontrada</p>
+      <button (click)="closeModal()">Cerrar</button>
+    </div>
+
+  </div>
+</div>

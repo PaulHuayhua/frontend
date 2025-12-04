@@ -1,43 +1,59 @@
 import { Routes } from '@angular/router';
-import { ProductList } from './feature/product/product-list/product-list';
-import { ProductForm } from './feature/product/product-form/product-form';
 import { AdminLayout } from './layout/admin-layout/admin-layout';
-
-import { productResolver } from './core/resolvers/product.resolver';
+import { LoginPage } from './feature/auth/login-page/login-page';
 import { authGuard } from './core/guards/auth.guard';
-import { WorkHoursGuard } from './core/guards/working-hours.guard';
+import { roleGuard } from './core/guards/role.guard';
 
 export const routes: Routes = [
   {
+    path: 'auth/login',
+    component: LoginPage,
+  },
+  {
     path: '',
     component: AdminLayout,
+    canActivate: [authGuard],
+    canActivateChild: [roleGuard],
     children: [
       {
-        path: 'product-list',
-        component: ProductList,
-        resolve: { products: productResolver },
-        canActivate: [WorkHoursGuard]
-
+        path: 'dashboard',
+        loadChildren: () =>
+          import('./feature/dashboard/dashboard.routes').then((m) => m.routes),
+        data: { roles: ['Administrador', 'Empleado'] },
       },
       {
-        path: 'product-form',
-        component: ProductForm,
-        canActivate: [authGuard]
+        path: 'suppliers',
+        loadChildren: () =>
+          import('./feature/supplier/supplier.routes').then((m) => m.routes),
+        data: { roles: ['Administrador'] },
       },
       {
-        path: 'product-form/:id',
-        component: ProductForm,
-        canActivate: [authGuard]
+        path: 'products',
+        loadChildren: () =>
+          import('./feature/product/product.routes').then((m) => m.routes),
+        data: { roles: ['Administrador', 'Empleado'] },
+      },
+      {
+        path: 'sales',
+        loadChildren: () =>
+          import('./feature/sale/sale.routes').then((m) => m.routes),
+        data: { roles: ['Administrador', 'Empleado'] },
+      },
+      {
+        path: 'buys',
+        loadChildren: () =>
+          import('./feature/buys/buy.routes').then((m) => m.routes),
+        data: { roles: ['Administrador'] },
       },
       {
         path: '',
-        redirectTo: 'product-list',
-        pathMatch: 'full'
-      }
-    ]
+        redirectTo: 'dashboard',
+        pathMatch: 'full',
+      },
+    ],
   },
   {
     path: '**',
-    redirectTo: 'product-list'
-  }
+    redirectTo: 'dashboard',
+  },
 ];

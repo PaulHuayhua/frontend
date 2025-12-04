@@ -16,7 +16,7 @@ export class WorkHoursGuard implements CanActivate {
       return true;
     }
 
-    if (horaActual >= 8 && horaActual <= 19) {
+    if (horaActual >= 8 && horaActual <= 23) {
 
       if (horaActual === 17 && minutos >= 45) {
         alert('⚠️ El horario de atención termina en menos de 15 minutos. Finaliza tus operaciones pronto.');

@@ -1,0 +1,334 @@
+/* ========================================
+   🎨 Colores base
+======================================== */
+$vino: #7B1E3B;
+$vino-dark: #5c1530;
+$vino-light: #A3475D;
+$dorado: #D4AF37;
+$beige: #FFF8E7;
+$rosa-claro: #FFF1F4;
+$gris-borde: #dcdcdc;
+$fondo-suave: #f5f5f500;
+$blanco: #fff;
+$texto: #333;
+
+/* ========================================
+   📄 Contenedor principal
+======================================== */
+.page-container {
+  padding: 0.8rem;
+  background: #241d1d00;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  font-size: 0.9rem;
+}
+
+.page-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 0.8rem;
+  color: $vino;
+}
+
+/* ========================================
+   🧱 Formulario
+======================================== */
+.form-card {
+  background: $blanco;
+  padding: 0.8rem;
+  border-radius: 10px;
+  border: 1px solid $gris-borde;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* ✦ Secciones */
+.section {
+  margin-bottom: 0.8rem;
+  background: $fondo-suave;
+  padding: 0.6rem;
+  border-radius: 8px;
+  border: 1px solid $gris-borde;
+}
+
+.section-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 0.6rem;
+  color: $vino;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.6rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* 🔲 Grid */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+}
+
+/* 📝 Inputs */
+.form-group {
+  display: flex;
+  flex-direction: column;
+
+  label {
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+    color: $texto;
+    font-size: 0.8rem;
+  }
+}
+
+.input {
+  padding: 0.3rem 0.4rem;
+  font-size: 0.8rem;
+  border-radius: 5px;
+  border: 1px solid $gris-borde;
+  background: $blanco;
+  font-family: inherit;
+  transition: all 0.2s;
+
+  &:focus {
+    border-color: $vino;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(123, 30, 59, 0.1);
+  }
+
+  &.small {
+    max-width: 80px;
+  }
+
+  &.ng-invalid.ng-touched {
+    border-color: #c0392b;
+  }
+}
+
+select.input {
+  cursor: pointer;
+}
+
+/* ─── Divider ─── */
+.divider {
+  margin: 0.6rem 0;
+  border: none;
+  border-top: 1px solid $gris-borde;
+}
+
+/* 🧩 Botón agregar */
+.btn-add {
+  background: $vino;
+  color: $blanco;
+  padding: 0.4rem 0.6rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.8rem;
+  transition: background 0.3s;
+
+  &:hover {
+    background: $vino-dark;
+  }
+}
+
+/* 📋 Tabla de detalles */
+.table-wrapper {
+  overflow-x: auto;
+  margin-top: 0.6rem;
+  border-radius: 6px;
+  border: 1px solid $gris-borde;
+  text-align: center;
+}
+
+.details-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+  text-align: center;
+
+  thead {
+    background: $rosa-claro;
+    text-align: center;
+
+    th {
+      padding: 0.4rem 0.3rem;
+      text-align: center;
+      font-weight: 600;
+      color: $vino;
+      border-bottom: 1px solid rgba(123, 30, 59, 0.2);
+      font-size: 0.8rem;
+      white-space: nowrap;
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid #ececec;
+      transition: background 0.2s;
+
+      &:hover {
+        background: #fafafa;
+      }
+    }
+
+    td {
+      padding: 0.35rem 0.3rem;
+      font-size: 0.8rem;
+      vertical-align: middle;
+
+      &.text-center { text-align: center; }
+      &.text-right { text-align: right; }
+      &.subtotal { font-weight: 700; color: $vino; }
+    }
+  }
+
+  input.input,
+  select.input {
+    padding: 0.25rem 0.3rem;
+    font-size: 0.75rem;
+    width: 100%;
+  }
+}
+
+/* Indicadores de stock */
+.stock-indicator {
+  font-weight: 600;
+  padding: 0.1rem 0.3rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+
+  &.stock-high { color: #28a745; }
+  &.stock-medium { color: #ffc107; }
+  &.stock-low { color: #c0392b; }
+}
+
+/* ❌ Botón eliminar */
+.btn-delete {
+  background: transparent;
+  border: 1px solid #c0392b;
+  color: #c0392b;
+  padding: 0.25rem 0.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.75rem;
+  transition: all 0.2s;
+
+  &:hover {
+    background: #c0392b;
+    color: $blanco;
+  }
+}
+
+/* 💰 Total de la venta */
+.total-container {
+  margin-top: 0.6rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.total-box {
+  background: linear-gradient(135deg, $dorado 0%, darken($dorado, 10%) 100%);
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+
+  .label {
+    color: $vino;
+    font-weight: 600;
+    font-size: 0.8rem;
+  }
+
+  .total-amount {
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: $vino;
+    transition: all 0.3s ease;
+
+    &:hover { transform: scale(1.05); }
+  }
+}
+
+/* 🔘 Botones finales */
+.actions {
+  margin-top: 0.8rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.btn-secondary {
+  background: #ccc;
+  color: $texto;
+  padding: 0.4rem 0.8rem;
+  border: none;
+  border-radius: 5px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.8rem;
+
+  &:hover { background: #b5b5b5; }
+}
+
+.btn-primary {
+  background: $vino;
+  color: $blanco;
+  padding: 0.4rem 1rem;
+  border: none;
+  border-radius: 5px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.3s;
+  box-shadow: 0 2px 6px rgba(123, 30, 59, 0.2);
+
+  &:hover:not(:disabled) {
+    background: $vino-dark;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(123, 30, 59, 0.3);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #999;
+  }
+}
+
+/* ========================================
+   📱 Responsive
+======================================== */
+@media (max-width: 768px) {
+  .page-container { padding: 0.6rem; }
+  .page-title { font-size: 1.2rem; }
+  .form-card { padding: 0.6rem; }
+  .form-grid { grid-template-columns: 1fr; gap: 0.6rem; }
+  .section { padding: 0.6rem; }
+  .section-header {
+    flex-direction: column;
+    align-items: stretch;
+
+    .btn-add { width: 100%; justify-content: center; }
+  }
+  .details-table { font-size: 0.8rem; }
+  .details-table thead th,
+  .details-table tbody td { padding: 0.4rem 0.3rem; }
+  .total-box { width: 100%; padding: 0.6rem 0.8rem; font-size: 1.3rem; }
+  .actions { flex-direction: column; gap: 0.5rem; }
+  .actions button { width: 100%; }
+}
+
+@media (max-width: 480px) {
+  .input.small { max-width: 100%; }
+}

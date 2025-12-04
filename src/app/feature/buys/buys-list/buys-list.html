@@ -1,0 +1,178 @@
+<div class="page-container premium">
+
+  <div class="page-header">
+    <div>
+      <h1>Gestión de Compras</h1>
+      <p>Control y registro de compras</p>
+    </div>
+
+    <button appColors class="btn-main" (click)="newBuy()">
+      <mat-icon>add</mat-icon>
+      Nueva Compra
+    </button>
+  </div>
+
+  <div class="cards-container">
+
+    <div class="card-item wine">
+      <div class="card-content">
+        <div class="text">
+          <h3>Total de Compras</h3>
+          <p class="number">{{ filteredBuys.length }}</p>
+          <span class="desc">Compras registradas</span>
+        </div>
+        <div class="icon">
+          <mat-icon>apartment</mat-icon>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-item gold">
+      <div class="card-content">
+        <div class="text">
+          <h3>Recibidas</h3>
+          <p class="number">{{ getCountByStatus('R') }}</p>
+          <span class="desc">Compras recibidas actualmente</span>
+        </div>
+        <div class="icon">
+          <mat-icon>check_circle</mat-icon>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-item wine-light">
+      <div class="card-content">
+        <div class="text">
+          <h3>Cancelados</h3>
+          <p class="number">{{ getCountByStatus('C') }}</p>
+          <span class="desc">Compras Cancelados</span>
+        </div>
+        <div class="icon">
+          <mat-icon>cancel</mat-icon>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FILTROS -->
+  <div class="filters-bar">
+
+    <div class="filters-group">
+
+      <!-- Estado -->
+      <div class="filter">
+        <label>Estado</label>
+        <select [(ngModel)]="filterStatus" (change)="applyFilters()">
+          <option value="">Todos</option>
+          <option value="R">Recibido</option>
+          <option value="C">Cancelado</option>
+        </select>
+      </div>
+
+      <!-- Código -->
+      <div class="filter">
+        <label>Código</label>
+        <input type="text" [(ngModel)]="searchCode" (input)="applyFilters()" placeholder="Ej: BUY-0001">
+      </div>
+
+      <!-- Nuevo filtro: Proveedor -->
+      <div class="filter">
+        <label>Proveedor</label>
+        <select [(ngModel)]="filterSupplier" (change)="applyFilters()">
+          <option value="">Todos</option>
+          <option *ngFor="let s of suppliers" [value]="s.identifier">
+            {{ s.company }}
+          </option>
+        </select>
+      </div>
+
+      <div class="filter">
+        <button class="btn-gray" (click)="clearFilters()"><mat-icon>refresh</mat-icon>Limpiar</button>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="table-card premium-table">
+    <table>
+      <thead appColors>
+        <tr>
+          <th (click)="sortBy('code')" class="sortable">Código</th>
+          <th (click)="sortBy('buysDate')" class="sortable">Fecha y Hora</th>
+          <th (click)="sortBy('user_identifier')" class="sortable">Usuario</th>
+          <th (click)="sortBy('supplier_identifier')" class="sortable">Proveedor</th>
+          <th (click)="sortBy('payment_method')" class="sortable">Método de Pago</th>
+          <th (click)="sortBy('totalPrice')" class="sortable text-right">Total</th>
+          <th class="text-center">Estado</th>
+          <th class="text-center">Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let item of filteredBuys" [class.row-cancelled]="item.status === 'C'"
+          [class.row-registered]="item.status === 'R'">
+
+          <td>{{ item.code }}</td>
+          <td>{{ item.buysDate | friendlyDate }}</td>
+          <td>{{ getUserName(item.user_identifier) }}</td>
+          <td>{{ getSupplierName(item.supplier_identifier) }}</td>
+          <td>{{ item.payment_method }}</td>
+
+          <td class="text-right total">{{ item.totalPrice | penCurrency }}</td>
+
+          <td class="text-center">
+            <span class="badge" [class.badge-registered]="item.status === 'R'"
+              [class.badge-cancelled]="item.status === 'C'">
+              {{ getStatusName(item.status) }}
+            </span>
+          </td>
+
+          <td class="text-center">
+            <div class="actions">
+
+              <button class="btn-icon btn-view" (click)="viewBuy(item.identifier)">
+                <mat-icon>visibility</mat-icon>
+              </button>
+
+              <button *ngIf="item.status === 'R'" class="btn-icon btn-edit" (click)="editBuy(item.identifier)">
+                <mat-icon>edit</mat-icon>
+              </button>
+
+              <button *ngIf="item.status === 'R'" class="btn-icon btn-cancel" (click)="cancelBuy(item.identifier)">
+                <mat-icon>close</mat-icon>
+              </button>
+
+              <button *ngIf="item.status === 'C'" class="btn-icon btn-restore" (click)="restoreBuy(item.identifier)">
+                <mat-icon>refresh</mat-icon>
+              </button>
+
+              <button class="btn-icon btn-pdf" (click)="downloadPdf(item.identifier)">
+                <mat-icon>picture_as_pdf</mat-icon>
+              </button>
+
+            </div>
+          </td>
+
+        </tr>
+
+        <tr *ngIf="filteredBuys.length === 0">
+          <td colspan="8" class="empty">
+            <mat-icon class="empty-icon">inventory_2</mat-icon>
+            <p>No hay compras registradas</p>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<app-alert [message]="alertMessage" [type]="alertType" [visible]="showAlert" [confirm]="confirmAlert"
+    (close)="showAlert = false" (confirmResult)="handleAlertConfirm($event)">
+  </app-alert>
+
+<!-- Router outlet para el modal -->
+<router-outlet></router-outlet>

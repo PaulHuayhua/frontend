@@ -1,0 +1,627 @@
+/* ========================================
+   🎨 Colores base
+======================================== */
+$vino: #6D2423;
+$vino-dark: darken(#6D2423, 10%);
+$vino-light: lighten(#6D2423, 15%);
+$dorado: #D4AF37;
+$rosa-claro: #FFF1F4;
+$gris-borde: #dcdcdc;
+$fondo-suave: #f5f5f5;
+$blanco: #fff;
+$texto: #333;
+
+/* ========================================
+   🪟 Modal Overlay
+======================================== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 1rem;
+  animation: fadeIn 0.3s ease;
+  backdrop-filter: blur(2px);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ========================================
+   📦 Modal Container
+======================================== */
+.modal-container {
+  background: $blanco;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  max-width: 1000px;
+  width: 100%;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ========================================
+   ⏳ Loading
+======================================== */
+.loading-container {
+  text-align: center;
+  padding: 4rem 1rem;
+
+  .spinner {
+    display: inline-block;
+    width: 3rem;
+    height: 3rem;
+    border: 3px solid $rosa-claro;
+    border-top-color: $vino;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  p {
+    margin-top: 1rem;
+    color: $texto;
+    font-size: 0.95rem;
+  }
+}
+
+@keyframes spin {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ========================================
+   📋 Modal Content
+======================================== */
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ========================================
+   🎯 Modal Header
+======================================== */
+.modal-header {
+  background: linear-gradient(135deg, $vino 0%, $vino-dark 100%);
+  color: $blanco;
+  padding: 1.5rem;
+  flex-shrink: 0;
+
+  .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .header-info {
+    flex: 1;
+
+    h2 {
+      font-size: 1.6rem;
+      font-weight: bold;
+      margin: 0 0 0.3rem 0;
+    }
+
+    .code {
+      font-size: 1.1rem;
+      font-family: 'Courier New', monospace;
+      opacity: 0.95;
+      margin: 0;
+    }
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .state-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+
+    &.state-received {
+      background: #28a745;
+      color: $blanco;
+    }
+
+    &.state-cancelled {
+      background: #dc3545;
+      color: $blanco;
+    }
+  }
+
+  .btn-close {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: $blanco;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+    flex-shrink: 0;
+
+    mat-icon {
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+    }
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: scale(1.1);
+    }
+  }
+}
+
+/* ========================================
+   📄 Modal Body
+======================================== */
+.modal-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.5rem;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $vino-light;
+    border-radius: 4px;
+
+    &:hover {
+      background: $vino;
+    }
+  }
+}
+
+/* ========================================
+   📝 Información General
+======================================== */
+.info-section {
+  margin-bottom: 1.5rem;
+
+  h3 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 0 0 1rem 0;
+    color: $vino;
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+
+  .info-item {
+    .label {
+      font-size: 0.85rem;
+      color: #666;
+      margin: 0 0 0.3rem 0;
+    }
+
+    .value {
+      font-weight: 600;
+      color: $texto;
+      font-size: 0.95rem;
+    }
+  }
+}
+
+/* ========================================
+   🛒 Tabla de Productos
+======================================== */
+.products-section {
+  h3 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 0 0 1rem 0;
+    color: $vino;
+  }
+
+  .table-wrapper {
+    overflow-x: auto;
+    border-radius: 8px;
+    border: 1px solid $gris-borde;
+    margin-bottom: 1rem;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+
+    thead {
+      background: $rosa-claro;
+
+      th {
+        padding: 0.8rem;
+        text-align: left;
+        font-weight: 600;
+        color: $vino;
+        font-size: 0.9rem;
+        white-space: nowrap;
+
+        &.text-center { text-align: center; }
+        &.text-right  { text-align: right; }
+      }
+    }
+
+    tbody {
+      tr {
+        border-bottom: 1px solid #eee;
+        transition: background 0.2s;
+
+        &:hover {
+          background: #fafafa;
+        }
+
+        &:last-child {
+          border-bottom: none;
+        }
+      }
+
+      td {
+        padding: 0.8rem;
+        font-size: 0.9rem;
+
+        &.text-center { text-align: center; }
+        &.text-right  { text-align: right; }
+
+        .product-name {
+          font-weight: 600;
+          color: $texto;
+          margin: 0;
+        }
+
+        &.subtotal {
+          font-weight: 700;
+          color: $vino;
+        }
+
+        &.empty-row {
+          padding: 2rem;
+          color: #999;
+
+          .empty-icon {
+            font-size: 48px;
+            width: 48px;
+            height: 48px;
+            color: #ccc;
+            display: block;
+            margin: 0 auto 0.5rem;
+          }
+
+          p {
+            margin: 0;
+            font-size: 1rem;
+          }
+        }
+      }
+    }
+  }
+}
+
+/* ========================================
+   💰 Total
+======================================== */
+.total-section {
+  display: flex;
+  justify-content: flex-end;
+
+  .total-box {
+    background: linear-gradient(135deg, $dorado 0%, darken($dorado, 10%) 100%);
+    border-radius: 10px;
+    padding: 1rem 1.5rem;
+    min-width: 250px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+
+      .label {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: $vino;
+      }
+
+      .amount {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: $vino;
+      }
+    }
+  }
+}
+
+/* ========================================
+   🔘 Modal Footer (Siempre visible)
+======================================== */
+.modal-footer {
+  background: $fondo-suave;
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  border-top: 1px solid $gris-borde;
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  flex-shrink: 0 !important;
+
+  .action-buttons {
+    display: flex;
+    gap: 0.8rem;
+  }
+
+  button {
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+
+    &.btn-secondary {
+      background: #6c757d;
+      color: $blanco;
+      &:hover { 
+        background: darken(#6c757d, 10%); 
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      }
+    }
+
+    &.btn-edit {
+      background: #ffc107;
+      color: $vino;
+      &:hover { 
+        background: darken(#ffc107, 10%); 
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      }
+    }
+
+    &.btn-pdf {
+      background: #dc3545;
+      color: $blanco;
+      &:hover { 
+        background: darken(#dc3545, 10%); 
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      }
+    }
+
+    &.btn-print {
+      background: #28a745;
+      color: $blanco;
+      &:hover { 
+        background: darken(#28a745, 10%); 
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      }
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+}
+
+/* ========================================
+   ⚠️ Error
+======================================== */
+.error-container {
+  text-align: center;
+  padding: 4rem 1rem;
+
+  .icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+  }
+
+  .message {
+    font-size: 1.2rem;
+    color: $texto;
+    margin-bottom: 1.5rem;
+  }
+
+  .btn-error {
+    background: $vino;
+    color: $blanco;
+    padding: 0.7rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 1rem;
+
+    &:hover { 
+      background: $vino-dark;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+  }
+}
+
+/* ========================================
+   🖨️ Impresión
+======================================== */
+@media print {
+  .modal-overlay {
+    position: static;
+    background: white;
+    padding: 0;
+  }
+
+  .modal-container {
+    max-width: 100%;
+    max-height: none;
+    box-shadow: none;
+  }
+
+  .modal-header {
+    background: #f5f5f5 !important;
+    color: #333 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+
+    .btn-close { display: none; }
+  }
+
+  .modal-footer { display: none !important; }
+
+  .state-badge { 
+    border: 2px solid #333;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .total-box {
+    background: #f9f9f9 !important;
+    border: 2px solid $dorado;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .modal-body {
+    overflow: visible;
+  }
+}
+
+/* ========================================
+   📱 Responsive
+======================================== */
+@media (max-width: 768px) {
+  .modal-container {
+    max-height: 95vh;
+    margin: 0.5rem;
+  }
+
+  .modal-header {
+    padding: 1rem;
+
+    .header-content {
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    h2 { font-size: 1.4rem; }
+    .code { font-size: 1rem; }
+
+    .header-actions {
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
+
+  .modal-body {
+    padding: 1rem;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .total-section .total-box {
+    width: 100%;
+    min-width: auto;
+    padding: 1rem;
+
+    .total-row {
+      .label { font-size: 1rem; }
+      .amount { font-size: 1.5rem; }
+    }
+  }
+
+  .modal-footer {
+    flex-direction: column;
+    gap: 0.8rem;
+
+    button,
+    .action-buttons {
+      width: 100%;
+    }
+
+    .action-buttons {
+      flex-direction: column;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  table {
+    font-size: 0.85rem;
+
+    th,
+    td {
+      padding: 0.5rem 0.3rem;
+    }
+  }
+
+  .modal-header .state-badge {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.8rem;
+  }
+
+  .modal-body {
+    padding: 0.8rem;
+  }
+
+  .info-section h3,
+  .products-section h3 {
+    font-size: 1.1rem;
+  }
+}

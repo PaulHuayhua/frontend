@@ -1,0 +1,534 @@
+// Variables de color
+$primary-color: #6d2423;
+$accent-color: #EAD585;
+$bg-color: #f8f9fa;
+$white: #ffffff;
+$text-dark: #2c3e50;
+$text-light: #7f8c8d;
+$success: #27ae60;
+$warning: #f39c12;
+$danger: #e74c3c;
+$shadow: rgba(0, 0, 0, 0.08);
+
+.dashboard-container {
+  padding: 1.25rem;
+  background: $bg-color;
+  min-height: 100vh;
+
+  // Header - Más compacto
+  .dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid $primary-color;
+
+    .welcome-section {
+      h1 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: $primary-color;
+        margin-bottom: 0.25rem;
+      }
+
+      .subtitle {
+        color: $text-light;
+        font-size: 0.875rem;
+      }
+    }
+
+    .date-info {
+      .date {
+        background: $primary-color;
+        color: $accent-color;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.875rem;
+        box-shadow: 0 2px 6px rgba(109, 36, 35, 0.2);
+      }
+    }
+  }
+
+  // Statistics Grid - Más compacto, solo 3 cards
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+
+    .stat-card {
+      background: $white;
+      border-radius: 12px;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      box-shadow: 0 2px 8px $shadow;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: $primary-color;
+      }
+
+      &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 12px rgba(109, 36, 35, 0.15);
+        border-color: $accent-color;
+      }
+
+      .stat-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: $white;
+        flex-shrink: 0;
+        background: $primary-color;
+        border: 2px solid $accent-color;
+
+        .material-icons {
+          font-size: 26px;
+        }
+      }
+
+      .stat-content {
+        flex: 1;
+
+        h3 {
+          font-size: 0.75rem;
+          color: $text-light;
+          margin-bottom: 0.375rem;
+          text-transform: uppercase;
+          letter-spacing: 0.3px;
+          font-weight: 600;
+        }
+
+        .stat-number {
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: $primary-color;
+          margin-bottom: 0.25rem;
+        }
+
+        .stat-trend {
+          font-size: 0.75rem;
+          display: flex;
+          align-items: center;
+          gap: 0.25rem;
+          color: $text-light;
+
+          .material-icons {
+            font-size: 14px;
+          }
+
+          &.positive { color: $success; }
+          &.negative { color: $danger; }
+          &.neutral { color: $text-light; }
+          &.warning { color: $warning; }
+        }
+      }
+    }
+  }
+
+  // Quick Actions - Más compacto
+  .quick-actions-section {
+    margin-bottom: 1.25rem;
+
+    .quick-actions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.75rem;
+
+      .quick-action-btn {
+        background: $white;
+        border: 2px solid $primary-color;
+        border-radius: 10px;
+        padding: 0.875rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: $primary-color;
+        box-shadow: 0 2px 6px $shadow;
+
+        .material-icons {
+          font-size: 32px;
+          color: $primary-color;
+          transition: all 0.3s ease;
+        }
+
+        &:hover {
+          background: $primary-color;
+          color: $accent-color;
+          border-color: $accent-color;
+          transform: translateY(-3px);
+          box-shadow: 0 6px 16px rgba(109, 36, 35, 0.2);
+
+          .material-icons {
+            color: $accent-color;
+            transform: scale(1.1);
+          }
+        }
+      }
+    }
+  }
+
+  // Charts Section - Más compacto
+  .charts-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+
+    .chart-card {
+      background: $white;
+      border-radius: 12px;
+      padding: 1rem;
+      box-shadow: 0 2px 8px $shadow;
+      border: 2px solid transparent;
+      transition: all 0.3s ease;
+
+      &:hover {
+        border-color: $accent-color;
+      }
+
+      .chart-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid $bg-color;
+      }
+
+      .chart-title {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: $primary-color;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        .material-icons {
+          color: $accent-color;
+          background: $primary-color;
+          padding: 0.25rem;
+          border-radius: 5px;
+          font-size: 18px;
+        }
+      }
+
+      .chart-total {
+        background: $primary-color;
+        color: $accent-color;
+        padding: 0.375rem 0.75rem;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 0.75rem;
+      }
+
+      canvas {
+        max-height: 240px;
+      }
+    }
+  }
+
+  // Recent Activities - Más compacto
+  .recent-activities {
+    margin-bottom: 1.25rem;
+
+    .activities-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1rem;
+
+      .activity-card {
+        background: $white;
+        border-radius: 12px;
+        padding: 1rem;
+        box-shadow: 0 2px 8px $shadow;
+        border: 2px solid transparent;
+
+        &:hover {
+          border-color: $accent-color;
+        }
+
+        .activity-title {
+          font-size: 0.95rem;
+          font-weight: 700;
+          color: $primary-color;
+          margin-bottom: 0.875rem;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding-bottom: 0.75rem;
+          border-bottom: 1px solid $bg-color;
+
+          .material-icons {
+            color: $accent-color;
+            background: $primary-color;
+            padding: 0.25rem;
+            border-radius: 5px;
+            font-size: 18px;
+          }
+
+          .badge {
+            margin-left: auto;
+            background: $primary-color;
+            color: $accent-color;
+            padding: 0.25rem 0.625rem;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: 700;
+
+            &.warning {
+              background: $warning;
+              color: $white;
+            }
+          }
+        }
+
+        .activity-list {
+          display: flex;
+          flex-direction: column;
+          gap: 0.625rem;
+          max-height: 200px;
+          overflow-y: auto;
+
+          &::-webkit-scrollbar {
+            width: 4px;
+          }
+
+          &::-webkit-scrollbar-track {
+            background: $bg-color;
+            border-radius: 10px;
+          }
+
+          &::-webkit-scrollbar-thumb {
+            background: $primary-color;
+            border-radius: 10px;
+          }
+
+          .activity-item {
+            padding: 0.75rem;
+            background: $bg-color;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid transparent;
+
+            &:hover {
+              background: lighten($accent-color, 35%);
+              transform: translateX(4px);
+              border-color: $primary-color;
+            }
+
+            &.warning {
+              background: lighten($warning, 35%);
+              border-left: 3px solid $warning;
+            }
+
+            .activity-info {
+              display: flex;
+              flex-direction: column;
+              gap: 0.25rem;
+
+              .activity-code,
+              .activity-name {
+                font-weight: 700;
+                color: $primary-color;
+                font-size: 0.875rem;
+              }
+
+              .activity-customer,
+              .activity-supplier,
+              .activity-category {
+                font-size: 0.75rem;
+                color: $text-light;
+              }
+            }
+
+            .activity-meta {
+              display: flex;
+              flex-direction: column;
+              align-items: flex-end;
+              gap: 0.25rem;
+
+              .activity-amount {
+                font-weight: 700;
+                color: $success;
+                font-size: 0.875rem;
+              }
+
+              .activity-date {
+                font-size: 0.75rem;
+                color: $text-light;
+              }
+
+              .stock-badge {
+                padding: 0.25rem 0.625rem;
+                border-radius: 10px;
+                font-size: 0.75rem;
+                font-weight: 700;
+                color: $white;
+
+                &.low {
+                  background: $warning;
+                }
+
+                &.critical {
+                  background: $danger;
+                  animation: pulse 2s infinite;
+                }
+              }
+            }
+          }
+        }
+
+        .no-data {
+          text-align: center;
+          color: $text-light;
+          padding: 2rem 1rem;
+          font-style: italic;
+          font-size: 0.875rem;
+
+          &.success {
+            color: $success;
+          }
+        }
+      }
+    }
+  }
+
+  // Summary Section - Más compacto
+  .summary-section {
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 0.875rem;
+
+      .summary-item {
+        background: $white;
+        padding: 0.875rem;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+        box-shadow: 0 2px 6px $shadow;
+
+        &:hover {
+          border-color: $primary-color;
+          transform: translateY(-2px);
+        }
+
+        .summary-icon {
+          width: 40px;
+          height: 40px;
+          background: $primary-color;
+          border-radius: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+          border: 2px solid $accent-color;
+
+          .material-icons {
+            color: $accent-color;
+            font-size: 22px;
+          }
+        }
+
+        .summary-content {
+          display: flex;
+          flex-direction: column;
+          gap: 0.25rem;
+
+          .summary-label {
+            font-size: 0.7rem;
+            color: $text-light;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+          }
+
+          .summary-value {
+            font-size: 1rem;
+            font-weight: 700;
+            color: $primary-color;
+          }
+        }
+      }
+    }
+  }
+
+  // Animations
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  // Responsive
+  @media (max-width: 1200px) {
+    .charts-section {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+
+    .dashboard-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.75rem;
+
+      .welcome-section h1 {
+        font-size: 1.25rem;
+      }
+    }
+
+    .stats-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .quick-actions-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .charts-section {
+      grid-template-columns: 1fr;
+      
+      .chart-card canvas {
+        max-height: 200px;
+      }
+    }
+
+    .activities-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .summary-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+}

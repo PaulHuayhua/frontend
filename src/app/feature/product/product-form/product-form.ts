@@ -1,13 +1,21 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+  ValidatorFn,
+  AbstractControl,
+  ValidationErrors
+} from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
-import { ProductService } from '../../../core/services/product';
+import { ProductService } from '../../../core/services/product.service';
 import { Product } from '../../../core/interfaces/product';
 import { Alert } from '../../../shared/components/alert/alert';
 
@@ -46,28 +54,19 @@ export class ProductForm implements OnInit {
   ngOnInit(): void {
     this.buildForm();
 
-    this.route.paramMap.subscribe(params => {
-      const idParam = params.get('id');
-      if (idParam) {
-        this.isEditMode = true;
-        const id = Number(idParam);
-        this.productService.findById(id).subscribe({
-          next: (product: Product) => {
-            this.form.patchValue(product);
-            this.form.get('identifier')?.setValue(product.identifier);
-          },
-          error: () => {
-            this.showErrorAlert('No se pudo cargar el producto.');
-            this.router.navigate(['/product-list']);
-          }
-        });
-      }
-    });
+    const idParam = this.route.snapshot.paramMap.get('id');
+    if (idParam) {
+      this.isEditMode = true;
+      const id = Number(idParam);
+      this.productService.findById(id).subscribe({
+        next: (product: Product) => this.form.patchValue(product),
+        error: () => this.showErrorAlert('No se pudo cargar el producto.')
+      });
+    }
   }
 
   buildForm(): void {
     const decimalPattern = /^\d+(\.\d{1,2})?$/;
-
     this.form = this.fb.group({
       identifier: [{ value: null, disabled: true }],
       code: [''],
@@ -78,26 +77,27 @@ export class ProductForm implements OnInit {
       stock: [1, [Validators.required, Validators.min(1), Validators.pattern(/^\d+$/)]],
       price: [0.01, [Validators.required, Validators.min(0.01), Validators.max(10000), Validators.pattern(decimalPattern)]],
       expirationDate: [null, [this.futureDateValidator(30, 1825), this.noSundayValidator()]],
-      category: ['', [Validators.required, Validators.maxLength(100)]],
+      category: ['', Validators.required],
       registrationDate: [{ value: new Date(), disabled: true }]
     });
   }
 
+  // --- VALIDADORES PERSONALIZADOS ---
   noMultipleSpacesValidator(): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
-      if (typeof control.value === 'string' && /\s{2,}/.test(control.value)) return { multipleSpaces: true };
-      return null;
-    };
+    return (control: AbstractControl): ValidationErrors | null =>
+      typeof control.value === 'string' && /\s{2,}/.test(control.value)
+        ? { multipleSpaces: true }
+        : null;
   }
 
   futureDateValidator(minDays: number, maxDays: number): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       if (!control.value) return null;
-      const today = new Date(); today.setHours(0,0,0,0);
-      const minDate = new Date(today); minDate.setDate(minDate.getDate() + minDays);
-      const maxDate = new Date(today); maxDate.setDate(maxDate.getDate() + maxDays);
+      const today = new Date(); today.setHours(0, 0, 0, 0);
+      const minDate = new Date(today); minDate.setDate(today.getDate() + minDays);
+      const maxDate = new Date(today); maxDate.setDate(today.getDate() + maxDays);
       const inputDate = new Date(control.value);
-      if (inputDate < minDate) return { futureDate: { requiredDaysAhead: minDays }};
+      if (inputDate < minDate) return { futureDate: true };
       if (inputDate > maxDate) return { tooFarDate: true };
       return null;
     };
@@ -110,12 +110,13 @@ export class ProductForm implements OnInit {
     };
   }
 
+  // --- ACCIONES DEL FORMULARIO ---
   onSubmit(): void {
     if (this.form.invalid) return;
     const product: Product = { ...this.form.getRawValue() };
 
     if (this.isEditMode) {
-      this.alertMessage = '¿Seguro que quieres modificar este producto?';
+      this.alertMessage = '¿Seguro que deseas actualizar este producto?';
       this.alertType = 'warning';
       this.confirmAlert = true;
       this.showAlert = true;
@@ -125,20 +126,21 @@ export class ProductForm implements OnInit {
     }
   }
 
+  // ✅ CORREGIDO: ahora maneja Confirmar / Cancelar correctamente
   handleAlertConfirm(confirmed: boolean): void {
-    if (!confirmed || !this.pendingProductData) {
-      this.pendingProductData = null;
-      return;
+    if (confirmed && this.pendingProductData) {
+      this.saveProduct(this.pendingProductData);
+    } else {
+      this.showAlert = false; // Cierra el alerta si se cancela
     }
-    this.saveProduct(this.pendingProductData);
     this.pendingProductData = null;
   }
 
+  // ✅ CORREGIDO: navegación absoluta y sin delay innecesario
   saveProduct(product: Product): void {
     const request$ = this.isEditMode
       ? this.productService.update(product.identifier!, product)
       : this.productService.save(product);
-    console.log('Payload enviado al backend:', product);
 
     request$.subscribe({
       next: () => {
@@ -146,14 +148,19 @@ export class ProductForm implements OnInit {
         this.alertType = 'success';
         this.confirmAlert = false;
         this.showAlert = true;
-        setTimeout(() => this.router.navigate(['/product-list']), 2000);
+
+        // Pequeño delay visual para mostrar el mensaje (1s)
+        setTimeout(() => {
+          this.showAlert = false;
+          this.router.navigate(['/products']); // ✅ Siempre vuelve al listado
+        }, 1000);
       },
       error: (error) => {
-        const msg = error?.error?.message || error?.error || '';
+        const msg = error?.error?.message || '';
         if (msg.includes('uq_product_complete')) {
-          this.showErrorAlert('Ya existe un producto con el mismo nombre, categoría, volumen y unidad de medida.');
+          this.showErrorAlert('Ya existe un producto con el mismo nombre y categoría.');
         } else {
-          this.showErrorAlert(`No se pudo ${this.isEditMode ? 'actualizar' : 'registrar'} el producto.`);
+          this.showErrorAlert('Error al guardar el producto.');
         }
       }
     });
@@ -167,6 +174,6 @@ export class ProductForm implements OnInit {
   }
 
   onCancel(): void {
-    this.router.navigate(['/product-list']);
+    this.router.navigate(['/products']);
   }
 }

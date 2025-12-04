@@ -1,0 +1,186 @@
+<div class="page-container">
+
+  <!-- Encabezado con título y badge de estado -->
+  <div class="page-header">
+    <h2 class="page-title">
+      {{ isEditMode ? 'Editar Compra' : 'Nueva Compra' }}
+    </h2>
+
+    <!-- Badge de estado (solo en edición/visualización) -->
+    <span *ngIf="(isEditMode ) && buy" class="status-badge" [ngClass]="getStatusClass()">
+      {{ getStatusLabel() }}
+    </span>
+  </div>
+
+  <form [formGroup]="buyForm" (ngSubmit)="onSubmit()" class="form-card">
+
+    <!-- Información General -->
+    <div class="section">
+      <h3 class="section-title">Información de la Compra</h3>
+      <div class="form-grid">
+
+        <!-- Código (solo en edición/visualización) -->
+        <div *ngIf="isEditMode" class="form-group">
+          <label>N° Código</label>
+          <input type="text" class="inputs" [value]="buy?.code" disabled />
+        </div>
+
+        <!-- Fecha de Emisión (solo en edición/visualización) -->
+        <div *ngIf="isEditMode" class="form-group">
+          <label>Fecha de Emisión</label>
+          <input type="text" class="inputs" [value]="buy?.buysDate | date:'dd-MM-yyyy HH:mm'" disabled />
+        </div>
+
+        <!-- Usuario Registrador -->
+        <div class="form-group">
+          <label>Usuario Registrador *</label>
+          <select formControlName="user_identifier" class="input" [disabled]="isEditMode">
+            <option value="">Seleccione un usuario</option>
+            <option *ngFor="let user of users" [value]="user.identifier">
+              {{ user.name }}
+            </option>
+          </select>
+          <small class="error-msg"
+            *ngIf="buyForm.get('user_identifier')?.invalid && buyForm.get('user_identifier')?.touched">
+            Debe seleccionar un usuario.
+          </small>
+        </div>
+
+        <!-- Proveedor -->
+        <div class="form-group">
+          <label>Proveedor *</label>
+          <select formControlName="supplier_identifier" class="input">
+            <option value="">Seleccione un proveedor</option>
+            <option *ngFor="let supplier of suppliers" [value]="supplier.identifier">
+              {{ supplier.company }}
+            </option>
+          </select>
+          <small class="error-msg"
+            *ngIf="buyForm.get('supplier_identifier')?.invalid && buyForm.get('supplier_identifier')?.touched">
+            Debe seleccionar un proveedor.
+          </small>
+        </div>
+
+        <!-- Método de Pago -->
+        <div class="form-group">
+          <label>Método de Pago *</label>
+          <select formControlName="payment_method" class="input">
+            <option value="">Seleccione</option>
+            <option value="Efectivo">Efectivo</option>
+            <option value="Tarjeta">Tarjeta</option>
+            <option value="Yape">Yape</option>
+          </select>
+          <small class="error-msg"
+            *ngIf="buyForm.get('payment_method')?.invalid && buyForm.get('payment_method')?.touched">
+            Debe seleccionar un método de pago.
+          </small>
+        </div>
+
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Detalles de Productos -->
+    <div class="section">
+      <div class="section-header">
+        <h3 class="section-title">Productos Comprados</h3>
+        <button *ngIf="!isViewMode" type="button" (click)="addDetail()" class="btn-add">
+          + Agregar Producto
+        </button>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="details-table">
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Cantidad</th>
+              <th>Costo Unitario</th>
+              <th>Subtotal</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody formArrayName="details">
+            <tr *ngFor="let detail of details.controls; let i = index" [formGroupName]="i">
+
+              <!-- Producto -->
+              <td>
+                <select formControlName="product_identifier" class="input_sma" (change)="onProductChange(i)">
+                  <option value="">Seleccione producto</option>
+                  <option *ngFor="let product of products" [value]="product.identifier">
+                    {{ product.name }}
+                  </option>
+                </select>
+                <small class="error-msg"
+                  *ngIf="detail.get('product_identifier')?.invalid && detail.get('product_identifier')?.touched">
+                  Requerido
+                </small>
+              </td>
+
+              <!-- Cantidad -->
+              <td>
+                <input type="number" class="input_small" formControlName="amount" min="1" (input)="onAmountChange(i)">
+                <small class="error-msg" *ngIf="detail.get('amount')?.invalid && detail.get('amount')?.touched">
+                  Mín. 1
+                </small>
+              </td>
+
+              <!-- Costo Unitario -->
+              <td>
+                <input type="number" class="input_small" formControlName="unitCost" min="0.01" step="0.01"
+                  (input)="onCostChange(i)">
+                <small class="error-msg" *ngIf="detail.get('unitCost')?.invalid && detail.get('unitCost')?.touched">
+                  Mín. 0.01
+                </small>
+              </td>
+
+              <!-- Subtotal -->
+              <td class="text-right subtotal">
+                S/ {{ detail.get('subtotal')?.value?.toFixed(2) || '0.00' }}
+              </td>
+
+              <!-- Acciones -->
+              <td class="text-center">
+                <button type="button" class="btn-delete" (click)="removeDetail(i)">
+                  Eliminar
+                </button>
+              </td>
+
+            </tr>
+
+            <!-- Mensaje si no hay detalles -->
+            <tr *ngIf="details.length === 0">
+              <td colspan="5" class="text-center empty-row">
+                No hay productos agregados
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Total -->
+      <div class="total-container">
+        <div class="total-box">
+          <span class="label">Total de la Compra:</span>
+          <span class="total-amount">S/ {{ calculateTotal().toFixed(2) }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botones de Acción -->
+    <div class="actions">
+      <button type="button" class="btn-secondary" (click)="cancel()">
+        Cancelar
+      </button>
+      <button type="submit" [disabled]="buyForm.invalid || details.length === 0" class="btn-primary">
+        {{ isEditMode ? 'Actualizar' : 'Registrar' }} Compra
+      </button>
+    </div>
+
+  </form>
+
+  <app-alert [message]="alertMessage" [type]="alertType" [visible]="showAlert" [confirm]="confirmAlert"
+    (close)="showAlert = false" (confirmResult)="handleAlertConfirm($event)">
+  </app-alert>
+</div>
